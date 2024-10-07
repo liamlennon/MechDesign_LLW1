@@ -12,12 +12,17 @@ public class PlayerController : MonoBehaviour
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
-
-	private void Awake()
+	public void Init(int dummyServicRef)
+	{
+		m_ActionMap = new PlayerControls();	
+		m_Movement = GetComponent<CharacterMovement>();
+		m_Movement.Init();
+	}
+   /* private void Awake()
 	{
 		m_ActionMap = new PlayerControls();
 		m_Movement = GetComponent<CharacterMovement>();
-	}
+	} */
 
 	private void OnEnable()
 	{
@@ -49,14 +54,10 @@ public class PlayerController : MonoBehaviour
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
 	{
 		m_Movement.SetInMove(context.ReadValue<float>());
-
-			
-
 	}
 	private void Handle_MoveCancelled(InputAction.CallbackContext context)
 	{
 		m_Movement.SetInMove(0f);
-		
 	}
 
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
