@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
 
+	private bool m_InMoveActive = false;
+	private Coroutine m_cMovement;
+
+
 	private void Awake()
 	{
 		m_ActionMap = new PlayerControls();
@@ -34,14 +38,25 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.Jump.performed -= Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled -= Handle_JumpCancelled;
 	}
+	private IEnumerator C_MovedUpdate()
+	{
+		while(m_InMoveActive)
+		{
+			yield return new WaitForSeconds(5f);
+		}
+	}
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
 	{
 		m_Movement.SetInMove(context.ReadValue<float>());
+
+			
+
 	}
 	private void Handle_MoveCancelled(InputAction.CallbackContext context)
 	{
 		m_Movement.SetInMove(0f);
+		
 	}
 
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
@@ -52,6 +67,4 @@ public class PlayerController : MonoBehaviour
 	{
 		m_Movement.StopJump();
 	}
-
-	//private IEnumerator Handle_Couritne
 }

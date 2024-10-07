@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -8,6 +9,9 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
 	[SerializeField] private float m_MoveSpeed;
 	[SerializeField] private float m_JumpStrength;
+
+	private bool m_IsMoving;
+	private Coroutine m_CMoveUpdate;
 
 	private float m_InMove;
 	[SerializeField] private float m_CoyoteTimer;
@@ -20,7 +24,38 @@ public class CharacterMovement : MonoBehaviour
 		Debug.Assert(m_GroundSensor != null);
 	}
 
-	public void SetInMove(float newMove) => m_InMove = newMove;
+	public void SetInMove(float newMove)
+	{
+		m_InMove = newMove;
+
+		if (m_InMove == 0)
+		{
+			//we are stopped;
+			if (!m_IsMoving) { return; }
+
+			m_IsMoving = false;
+		}
+		else
+		{
+			// we are moving
+			if (m_IsMoving) { return; }
+
+			m_IsMoving = true;
+			m_CMoveUpdate = StartCoroutine(C_MoveUpdate());
+		}
+	}
+
+	private IEnumerator C_MoveUpdate()
+	{
+		while(m_IsMoving)
+		{
+			m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+			yield return new WaitForFixedUpdate();
+		}
+
+        m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
+    }
 	public void StartJump()
 	{
 		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
