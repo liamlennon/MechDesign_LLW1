@@ -9,20 +9,24 @@ public class PlayerController : MonoBehaviour
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
 
+	private HealthComponent m_HealthComponent;
+
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
-	public void Init(int dummyServicRef)
+
+	/*public void Init(int dummyServicRef)
 	{
 		m_ActionMap = new PlayerControls();	
 		m_Movement = GetComponent<CharacterMovement>();
-		m_Movement.Init();
+		//m_Movement.Init();
 	}
-   /* private void Awake()
+   */ private void Awake()
 	{
 		m_ActionMap = new PlayerControls();
 		m_Movement = GetComponent<CharacterMovement>();
-	} */
+		m_HealthComponent = GetComponent<HealthComponent>();	
+	} 
 
 	private void OnEnable()
 	{
@@ -32,6 +36,12 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.MoveHoriz.canceled += Handle_MoveCancelled;
 		m_ActionMap.Default.Jump.performed += Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled += Handle_JumpCancelled;
+
+		m_ActionMap.Default.Crouch.performed += Handle_CrouchPeformed;
+		m_ActionMap.Default.Crouch.canceled += Handle_CrouchCancelled;
+
+		m_HealthComponent.OnDamage += Handle_HealhDamage;
+		m_HealthComponent.OnDeath += Handle_OnDead;
 	}
 
 	private void OnDisable()
@@ -42,7 +52,14 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.MoveHoriz.canceled -= Handle_MoveCancelled;
 		m_ActionMap.Default.Jump.performed -= Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled -= Handle_JumpCancelled;
-	}
+
+		m_ActionMap.Default.Crouch.performed -= Handle_CrouchPeformed;
+		m_ActionMap.Default.Crouch.canceled -= Handle_CrouchCancelled;
+
+
+		m_HealthComponent.OnDamage -= Handle_HealhDamage;
+		m_HealthComponent.OnDeath -= Handle_OnDead;	
+    }
 	private IEnumerator C_MovedUpdate()
 	{
 		while(m_InMoveActive)
@@ -67,5 +84,24 @@ public class PlayerController : MonoBehaviour
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
 		m_Movement.StopJump();
+	}
+
+	private void Handle_CrouchPeformed(InputAction.CallbackContext context)
+	{
+		
+	}
+
+	private void Handle_CrouchCancelled(InputAction.CallbackContext context) {
+
+	}
+
+	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
+	{
+		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
+	}
+
+	private void Handle_OnDead(MonoBehaviour causer) 
+	{
+		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
 	}
 }

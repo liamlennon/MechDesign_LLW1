@@ -4,6 +4,20 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterMovement : MonoBehaviour
 {
+	/*
+	Jump Buffering
+	Coyote Time
+	Anti-Gravity Apex
+	Speed Apex
+	Sticky Feet on Land
+	Bumped Head Correction
+	Corner Clip on Jumps
+	Hold Crouch to Stay on Ledge
+	Relaxed Semi-Solids
+	Variable Jump Strength
+	 */
+	
+	
 	private Rigidbody2D m_RB;
 
 	[SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
@@ -17,6 +31,10 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_CoyoteTimer;
 	[SerializeField] private float m_CoyoteThresHold;
 
+
+
+	private bool m_IsJumpBuffering;
+	private float m_JumpBufferingTimer;
 
 	private void Awake()
 	{

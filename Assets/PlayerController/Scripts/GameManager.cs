@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,11 +8,28 @@ public class GameManager : MonoBehaviour
 
     int dummyServicRef;
 
-    IEnumerable Start()
+    private int m_CurrentScore = 0;
+
+    public static Action<int> OnGainPoints;
+
+    private void OnEnable()
     {
-        yield return new WaitForSeconds(2f);
-        m_PlayerController = Instantiate(m_PlayerController);
-
-
+        OnGainPoints += Handle_RecievePoints;
     }
+
+    private void OnDisable()
+    {
+        OnGainPoints -= Handle_RecievePoints;
+    }
+
+    private void Handle_RecievePoints(int points) 
+    {
+        Debug.Log($"The current score is: {m_CurrentScore}");
+    }
+
+    //IEnumerable Start()
+    //{
+    //    yield return new WaitForSeconds(2f);
+    //    m_PlayerController = Instantiate(m_PlayerController);
+    //}
 }
