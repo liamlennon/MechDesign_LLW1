@@ -2973,6 +2973,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 929667974029550097, guid: 3357c003e0755d64c8b53ac23d3acd15, type: 3}
+      propertyPath: m_CoyoteTimer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 929667974029550097, guid: 3357c003e0755d64c8b53ac23d3acd15, type: 3}
       propertyPath: m_CoyoteThresHold
       value: 0.4
       objectReference: {fileID: 0}

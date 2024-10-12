@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -19,10 +20,15 @@ public class CharacterMovement : MonoBehaviour
 	
 	
 	private Rigidbody2D m_RB;
+	[SerializeField] CapsuleCollider2D m_CapsuleCollider;
 
 	[SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
 	[SerializeField] private float m_MoveSpeed;
 	[SerializeField] private float m_JumpStrength;
+
+	private bool m_isJumping;
+	[SerializeField] private float m_JumpBufferTimer;
+	[SerializeField] private float m_JumpBufferCountdown = 0.5f;
 
 	private bool m_IsMoving;
 	private Coroutine m_CMoveUpdate;
@@ -39,6 +45,7 @@ public class CharacterMovement : MonoBehaviour
 	private void Awake()
 	{
 		m_RB = GetComponent<Rigidbody2D>();
+        m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
 		Debug.Assert(m_GroundSensor != null);
 	}
 
@@ -74,14 +81,44 @@ public class CharacterMovement : MonoBehaviour
         m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
 
     }
+
+	public void StartCrouch()
+	{
+		Debug.Log("Crouch pressed---------------------");
+	}
+
+	public void StopCrouch() 
+	{
+        Debug.Log("Crouch pressed---------------------");
+
+    }
+
 	public void StartJump()
 	{
+		
+		//determine how far off ground player is to allow early or late input then jump
+		// Calculate how high rigibody is off the ground
+
 		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
 		{
-			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+			m_JumpBufferingTimer = m_JumpBufferCountdown;
+			
+			m_isJumping = true;
+			if(m_JumpBufferingTimer == m_JumpBufferCountdown)
+			{
+				m_JumpBufferCountdown -= Time.fixedDeltaTime;
+				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+			}
+			
 		}
+
+		
 	}
-	public void StopJump() { }
+	public void StopJump() 
+	{ 
+	      m_isJumping = false;
+		  m_JumpBufferCountdown = 0;
+	}
 
 	private void FixedUpdate()
 	{
@@ -96,6 +133,15 @@ public class CharacterMovement : MonoBehaviour
 		{
 			m_CoyoteTimer = m_CoyoteThresHold;
 		}
+
+		//const float ySize = 100.0f;
+
+        //m_CapsuleCollider.size = new Vector2(m_CapsuleCollider.size.y, m_CapsuleCollider.size.x);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
     }
 }
 
