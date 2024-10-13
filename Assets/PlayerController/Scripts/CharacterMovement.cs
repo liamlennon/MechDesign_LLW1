@@ -37,7 +37,8 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_CoyoteTimer;
 	[SerializeField] private float m_CoyoteThresHold;
 
-
+	[SerializeField] private float m_MinSpeed;
+	[SerializeField] private float m_MaxSpeed;
 
 	private bool m_IsJumpBuffering;
 	private float m_JumpBufferingTimer;
@@ -116,8 +117,14 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StopJump() 
 	{ 
-	      m_isJumping = false;
-		  m_JumpBufferCountdown = 0;
+	    
+		if(!m_GroundSensor.HasDetectedHit() || m_CoyoteTimer < 0)
+		{
+				m_isJumping = false;
+			    m_JumpBufferCountdown = 0;
+
+		}
+		
 	}
 
 	private void FixedUpdate()
@@ -135,13 +142,13 @@ public class CharacterMovement : MonoBehaviour
 		}
 
 		//const float ySize = 100.0f;
-
-        //m_CapsuleCollider.size = new Vector2(m_CapsuleCollider.size.y, m_CapsuleCollider.size.x);
+		
+        //m_CapsuleCollider.size = new Vector2(0.5f, 1);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+		//m_CapsuleCollider.size = new Vector2(1, 1);
     }
 }
 
