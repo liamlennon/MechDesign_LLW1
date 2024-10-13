@@ -27,8 +27,8 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_JumpStrength;
 
 	private bool m_isJumping;
-	[SerializeField] private float m_JumpBufferTimer;
-	[SerializeField] private float m_JumpBufferCountdown = 0.5f;
+	[SerializeField] private float m_JumpBufferTimer = 0.5f;
+	[SerializeField] private float m_JumpBufferCountdown;
 
 	private bool m_IsMoving;
 	private Coroutine m_CMoveUpdate;
@@ -38,10 +38,11 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_CoyoteThresHold;
 
 	[SerializeField] private float m_MinSpeed;
+	[SerializeField] private float m_CurrentSpeed;
 	[SerializeField] private float m_MaxSpeed;
 
 	private bool m_IsJumpBuffering;
-	private float m_JumpBufferingTimer;
+
 
 	private void Awake()
 	{
@@ -53,6 +54,11 @@ public class CharacterMovement : MonoBehaviour
 	public void SetInMove(float newMove)
 	{
 		m_InMove = newMove;
+
+		if(m_MoveSpeed == m_MaxSpeed)
+		{
+			m_RB.gameObject.SetActive(false);
+		}
 
 		if (m_InMove == 0)
 		{
@@ -75,13 +81,28 @@ public class CharacterMovement : MonoBehaviour
 	{
 		while(m_IsMoving)
 		{
-			m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
-			yield return new WaitForFixedUpdate();
+
+            //use lerp for min and max speed
+            //temporarily disable rigibody when max speed is met
+            //lerp may be no good because it's for two vectors and float not 3 floats
+            //Maybe use coroutine
+            m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
+			if(m_CurrentSpeed ==  m_MaxSpeed)
+			{
+				//turn off game objects rigibody
+				//Does rigibody need to be turned off while at max speed or only a set amount of time
+				m_RB.simulated = false;
+			}
+
+            yield return new WaitForFixedUpdate();
 		}
 
         m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
 
     }
+
+
 
 	public void StartCrouch()
 	{
@@ -102,10 +123,10 @@ public class CharacterMovement : MonoBehaviour
 
 		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
 		{
-			m_JumpBufferingTimer = m_JumpBufferCountdown;
+			m_JumpBufferCountdown = m_JumpBufferTimer; 
 			
 			m_isJumping = true;
-			if(m_JumpBufferingTimer == m_JumpBufferCountdown)
+			if(m_JumpBufferCountdown ==   m_JumpBufferTimer)
 			{
 				m_JumpBufferCountdown -= Time.fixedDeltaTime;
 				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
@@ -121,10 +142,8 @@ public class CharacterMovement : MonoBehaviour
 		if(!m_GroundSensor.HasDetectedHit() || m_CoyoteTimer < 0)
 		{
 				m_isJumping = false;
-			    m_JumpBufferCountdown = 0;
-
+			   m_JumpBufferCountdown = 0;
 		}
-		
 	}
 
 	private void FixedUpdate()
