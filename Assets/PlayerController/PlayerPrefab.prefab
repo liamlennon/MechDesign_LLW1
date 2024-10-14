@@ -80,8 +80,13 @@ MonoBehaviour:
   m_GroundSensor: {fileID: 2938755533799335079}
   m_MoveSpeed: 5
   m_JumpStrength: 10
+  m_JumpBufferTimer: 0.5
+  m_JumpBufferCountdown: 0
   m_CoyoteTimer: 0
   m_CoyoteThresHold: 0
+  m_MinSpeed: 0
+  m_CurrentSpeed: 0
+  m_MaxSpeed: 0
 --- !u!114 &7287660109704455578
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Data.SqlTypes;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +15,10 @@ public class PlayerController : MonoBehaviour
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
+	[SerializeField] private float m_JumpbufferTimer = 0.5f;
+	[SerializeField] private float m_JumpBufferCountdown;
+	private bool m_IsJumping;
+	private Coroutine m_cJumpBuffer;
 
 	/*public void Init(int dummyServicRef)
 	{
@@ -56,7 +61,6 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.Crouch.performed -= Handle_CrouchPeformed;
 		m_ActionMap.Default.Crouch.canceled -= Handle_CrouchCancelled;
 
-
 		m_HealthComponent.OnDamage -= Handle_HealhDamage;
 		m_HealthComponent.OnDeath -= Handle_OnDead;	
     }
@@ -79,8 +83,25 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
 	{
+		m_JumpBufferCountdown = m_JumpbufferTimer;
+
+		if(m_JumpBufferCountdown > 0) 
+		{
+			C_JumpBuffer();
+		}
+	
 		m_Movement.StartJump();
+		//maybe use while loop. While jump buffering is greater than 0 execute jump function
 	}
+
+	private IEnumerator C_JumpBuffer()
+	{
+		m_IsJumping = true;
+		yield return new WaitForSeconds(m_JumpBufferCountdown);
+		m_Movement.StartJump();
+		m_IsJumping = false;
+	}
+
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
 		m_Movement.StopJump();
