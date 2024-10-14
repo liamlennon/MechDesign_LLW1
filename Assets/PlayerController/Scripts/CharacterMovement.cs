@@ -146,5 +146,6 @@ public class CharacterMovement : MonoBehaviour
     {
 		//m_CapsuleCollider.size = new Vector2(1, 1);
     }
+
 }
 
