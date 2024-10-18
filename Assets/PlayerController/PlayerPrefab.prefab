@@ -80,8 +80,6 @@ MonoBehaviour:
   m_GroundSensor: {fileID: 2938755533799335079}
   m_MoveSpeed: 5
   m_JumpStrength: 10
-  m_JumpBufferTimer: 0.5
-  m_JumpBufferCountdown: 0
   m_CoyoteTimer: 0
   m_CoyoteThresHold: 0
   m_MinSpeed: 0
@@ -99,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b283c9a4132404c8b6d48875b78b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_JumpbufferTimer: 0.5
+  m_JumpBufferCountdown: 0
 --- !u!1 &2062927974038001864
 GameObject:
   m_ObjectHideFlags: 0

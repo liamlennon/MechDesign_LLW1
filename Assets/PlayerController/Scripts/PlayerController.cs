@@ -112,13 +112,11 @@ public class PlayerController : MonoBehaviour
 	private void Handle_CrouchPeformed(InputAction.CallbackContext context)
 	{
 		m_Movement.StartCrouch();
-        Debug.Log("Crouch pressed---------------------");
     }
 
 	private void Handle_CrouchCancelled(InputAction.CallbackContext context) 
 	{
 		m_Movement.StopCrouch();
-        Debug.Log("Crouch pressed---------------------");
     }
 
 	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
