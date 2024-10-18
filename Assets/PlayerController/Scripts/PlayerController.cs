@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
+	[SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
+
 	[SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferCountdown;
 	private bool m_IsJumping;
@@ -39,11 +41,16 @@ public class PlayerController : MonoBehaviour
 
 		m_ActionMap.Default.MoveHoriz.performed += Handle_MovePerformed;
 		m_ActionMap.Default.MoveHoriz.canceled += Handle_MoveCancelled;
+
 		m_ActionMap.Default.Jump.performed += Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled += Handle_JumpCancelled;
 
 		m_ActionMap.Default.Crouch.performed += Handle_CrouchPeformed;
 		m_ActionMap.Default.Crouch.canceled += Handle_CrouchCancelled;
+
+		m_ActionMap.Default.Shoot.performed += Handle_ShootPerformed;
+
+		m_ActionMap.Default.Dash.performed += Handle_DashPreformed;
 
 		m_HealthComponent.OnDamage += Handle_HealhDamage;
 		m_HealthComponent.OnDeath += Handle_OnDead;
@@ -60,6 +67,10 @@ public class PlayerController : MonoBehaviour
 
 		m_ActionMap.Default.Crouch.performed -= Handle_CrouchPeformed;
 		m_ActionMap.Default.Crouch.canceled -= Handle_CrouchCancelled;
+
+		m_ActionMap.Default.Shoot.performed -= Handle_ShootPerformed;
+
+		m_ActionMap.Default.Dash.performed -= Handle_DashPreformed;
 
 		m_HealthComponent.OnDamage -= Handle_HealhDamage;
 		m_HealthComponent.OnDeath -= Handle_OnDead;	
@@ -118,6 +129,21 @@ public class PlayerController : MonoBehaviour
 	{
 		m_Movement.StopCrouch();
     }
+
+	private void Handle_ShootPerformed(InputAction.CallbackContext context)
+	{
+		GameObject bullet = m_ObjectPooler.GetPooledObject("bullet");
+		if (bullet == null)  { return; }
+
+		bullet.SetActive(true);
+
+		bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2, 0);
+	}
+
+	private void Handle_DashPreformed(InputAction.CallbackContext context)
+	{
+
+	}
 
 	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
 	{
