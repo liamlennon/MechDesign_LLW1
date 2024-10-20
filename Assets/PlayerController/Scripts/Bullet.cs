@@ -16,6 +16,6 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D()
     {
-        m_PooledObject.RecycleSelf();   
+        m_PooledObject.RecycleSelf();
     }
 }

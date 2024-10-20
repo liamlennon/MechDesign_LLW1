@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Data.SqlTypes;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +12,9 @@ public class PlayerController : MonoBehaviour
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
 
-	private HealthComponent m_HealthComponent;
+	[SerializeField] Rigidbody2D Rigidbody2D;
+
+    private HealthComponent m_HealthComponent;
 
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
@@ -51,6 +55,7 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.Shoot.performed += Handle_ShootPerformed;
 
 		m_ActionMap.Default.Dash.performed += Handle_DashPreformed;
+		m_ActionMap.Default.Dash.canceled += Handle_DashCancelled;
 
 		m_HealthComponent.OnDamage += Handle_HealhDamage;
 		m_HealthComponent.OnDeath += Handle_OnDead;
@@ -71,13 +76,12 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.Shoot.performed -= Handle_ShootPerformed;
 
 		m_ActionMap.Default.Dash.performed -= Handle_DashPreformed;
+		m_ActionMap.Default.Dash.canceled -= Handle_DashCancelled;
 
 		m_HealthComponent.OnDamage -= Handle_HealhDamage;
 		m_HealthComponent.OnDeath -= Handle_OnDead;	
     }
-
-
-	private IEnumerator C_MovedUpdate()
+    private IEnumerator C_MovedUpdate()
 	{
 		while(m_InMoveActive)
 		{
@@ -142,10 +146,13 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_DashPreformed(InputAction.CallbackContext context)
 	{
-
+			m_Movement.StartDash();
+		
+    }
+	private void Handle_DashCancelled(InputAction.CallbackContext context) 
+	{ 	
 	}
-
-	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
+    private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
 	{
 		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
 	}

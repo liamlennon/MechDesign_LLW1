@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class CharacterMovement : MonoBehaviour
@@ -25,7 +26,15 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_MoveSpeed;
 	[SerializeField] private float m_JumpStrength;
 
-	private bool m_isJumping;
+
+    [SerializeField] private TrailRenderer tr;
+    private bool canDash = true;
+    private bool isDashing;
+    private float dashingPower = 22224f;
+    private float dashingTime = 0.2f;
+    private float dashingCooldown = 1f;
+
+    private bool m_isJumping;
 	//[SerializeField] private float m_JumpBufferTimer = 0.5f;
 	//[SerializeField] private float m_JumpBufferCountdown;
 
@@ -48,7 +57,21 @@ public class CharacterMovement : MonoBehaviour
         m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
 		Debug.Assert(m_GroundSensor != null);
 	}
-	public void SetInMove(float newMove)
+    private void Update()
+    {
+        if (isDashing) { return; }
+    }
+
+    private void FixedUpdate()
+    {
+        m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
+        m_CoyoteTimer -= Time.fixedDeltaTime;
+        
+		if (isDashing) { return; }
+
+    }
+    public void SetInMove(float newMove)
 	{
 		m_InMove = newMove;
 		if(m_MoveSpeed == m_MaxSpeed)
@@ -96,9 +119,35 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StopCrouch() 
 	{
-        Debug.Log("Crouch pressed---------------------");
+        Debug.Log("Crouch not pressed---------------------");
     }
-	public void StartJump()
+	public void StartDash()
+	{
+        if (canDash && context.performed)
+        {
+            Debug.Log("IsDashing");
+            StartCoroutine(Dash());
+        }
+    }
+
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float originalGravity = Rigidbody2D.gravityScale;
+        Rigidbody2D.gravityScale = 0f;
+        Rigidbody2D.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashingTime);
+        tr.emitting = false;
+        Rigidbody2D.gravityScale = originalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
+    }
+
+
+    public void StartJump()
 	{
 		//m_JumpBufferCountdown = m_JumpBufferTimer; 
 		//determine how far off ground player is to allow early or late input then jump
@@ -123,12 +172,7 @@ public class CharacterMovement : MonoBehaviour
 		}
 		*/
 	}
-	private void FixedUpdate()
-	{
-		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
 
-		m_CoyoteTimer -= Time.fixedDeltaTime;
-	}
 
     private void OnCollisionExit2D(Collision2D collision)
     {

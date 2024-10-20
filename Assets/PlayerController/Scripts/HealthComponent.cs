@@ -6,6 +6,8 @@ public class HealthComponent : MonoBehaviour, IDamageable
     public event Action<float, float, float> OnDamage;
     public event Action<MonoBehaviour> OnDeath;
 
+    public GameObject Player;
+
     [SerializeField] private float m_MaxHealth;
     private float m_CurrentHealth;
 
@@ -20,5 +22,7 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
         OnDamage?.Invoke(m_CurrentHealth, m_MaxHealth, change);
         if(m_CurrentHealth <= 0.0f) { OnDeath?.Invoke(causer);  }
+
+       
     }
 }
