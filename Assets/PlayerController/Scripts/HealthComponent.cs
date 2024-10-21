@@ -9,7 +9,7 @@ public class HealthComponent : MonoBehaviour, IDamageable
     public GameObject Player;
 
     [SerializeField] private float m_MaxHealth;
-    private float m_CurrentHealth;
+    [SerializeField] private float m_CurrentHealth;
 
     private void Awake()
     {

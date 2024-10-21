@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 [RequireComponent (typeof(CharacterMovement))]
 public class PlayerController : MonoBehaviour
@@ -163,6 +165,6 @@ public class PlayerController : MonoBehaviour
 	private void Handle_OnDead(MonoBehaviour causer) 
 	{
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
-		Destroy(causer);
-	}
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
