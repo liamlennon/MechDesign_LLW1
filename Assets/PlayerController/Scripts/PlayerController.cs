@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 {
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
+	public	StatefulRaycastSensor2D m_Sensor;
 
 	private GameObject m_Character;
 
@@ -27,7 +28,6 @@ public class PlayerController : MonoBehaviour
 
 	[SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferCountdown;
-	private bool m_IsJumping;
 	private Coroutine m_cJumpBuffer;
 
 	/*public void Init(int dummyServicRef)
@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap = new PlayerControls();
 		m_Movement = GetComponent<CharacterMovement>();
 		m_HealthComponent = GetComponent<HealthComponent>();
+		m_Sensor = GetComponent<StatefulRaycastSensor2D>();
 	
 	} 
 
@@ -107,21 +108,23 @@ public class PlayerController : MonoBehaviour
 	{
 		m_JumpBufferCountdown = m_JumpbufferTimer;
 
-		if(m_JumpBufferCountdown > 0) 
+		if(m_JumpBufferCountdown > 0) //could add condition where don't jump when grounded
 		{
-			C_JumpBuffer();
+			StartCoroutine(C_JumpBuffer());
 		}
 	
 		m_Movement.StartJump();
-		//maybe use while loop. While jump buffering is greater than 0 execute jump function
+		
 	}
 
 	private IEnumerator C_JumpBuffer()
 	{
-		m_IsJumping = true;
+		Debug.Log("I am jump buffering-------------------------");
 		yield return new WaitForSeconds(m_JumpBufferCountdown);
+		//m_JumpBufferCountdown -= Time.deltaTime;
+		//m_JumpBufferCountdown--;
+		Debug.Log(m_JumpBufferCountdown);
 		m_Movement.StartJump();
-		m_IsJumping = false;
 	}
 
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
