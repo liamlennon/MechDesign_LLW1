@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
 
+	private GameObject m_Character;
+
 	[SerializeField] Rigidbody2D Rigidbody2D;
 
     private HealthComponent m_HealthComponent;
@@ -36,7 +38,8 @@ public class PlayerController : MonoBehaviour
 	{
 		m_ActionMap = new PlayerControls();
 		m_Movement = GetComponent<CharacterMovement>();
-		m_HealthComponent = GetComponent<HealthComponent>();	
+		m_HealthComponent = GetComponent<HealthComponent>();
+	
 	} 
 
 	private void OnEnable()
@@ -160,5 +163,6 @@ public class PlayerController : MonoBehaviour
 	private void Handle_OnDead(MonoBehaviour causer) 
 	{
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
+		Destroy(causer);
 	}
 }
