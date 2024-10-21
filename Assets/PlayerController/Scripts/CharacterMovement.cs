@@ -123,7 +123,7 @@ public class CharacterMovement : MonoBehaviour
     }
 	public void StartDash()
 	{
-        if (canDash && context.performed)
+        if (canDash)
         {
             Debug.Log("IsDashing");
             StartCoroutine(Dash());
@@ -134,13 +134,13 @@ public class CharacterMovement : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        float originalGravity = Rigidbody2D.gravityScale;
-        Rigidbody2D.gravityScale = 0f;
-        Rigidbody2D.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
+        float originalGravity = m_RB.gravityScale;
+        m_RB.gravityScale = 0f;
+        m_RB.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
         tr.emitting = true;
         yield return new WaitForSeconds(dashingTime);
         tr.emitting = false;
-        Rigidbody2D.gravityScale = originalGravity;
+        m_RB.gravityScale = originalGravity;
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
