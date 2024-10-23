@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b283c9a4132404c8b6d48875b78b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Sensor: {fileID: 0}
   Rigidbody2D: {fileID: 969958807700409231}
   m_ObjectPooler: {fileID: 0}
   m_JumpbufferTimer: 0.5
