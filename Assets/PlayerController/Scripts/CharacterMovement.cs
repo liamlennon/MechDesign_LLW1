@@ -18,7 +18,7 @@ public class CharacterMovement : MonoBehaviour
 	Relaxed Semi-Solids
 	Variable Jump Strength
 	 */
-	
+
 	private Rigidbody2D m_RB;
 	[SerializeField] CapsuleCollider2D m_CapsuleCollider;
 
@@ -27,14 +27,14 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_JumpStrength;
 
 
-    [SerializeField] private TrailRenderer tr;
-    private bool canDash = true;
-    private bool isDashing;
-    private float dashingPower = 22224f;
-    private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
+	[SerializeField] private TrailRenderer tr;
+	private bool canDash = true;
+	private bool isDashing;
+	private float dashingPower = 22224f;
+	private float dashingTime = 0.2f;
+	private float dashingCooldown = 1f;
 
-    private bool m_isJumping;
+	private bool m_isJumping;
 	//[SerializeField] private float m_JumpBufferTimer = 0.5f;
 	//[SerializeField] private float m_JumpBufferCountdown;
 
@@ -50,27 +50,65 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_MaxSpeed;
 
 	private bool m_IsJumpBuffering;
+	enum JumpStates
+	{
+		Rising,
+		Apex,
+		Falling
+	}
+	JumpStates jumpStates = JumpStates.Rising, Apex, Falling;
+
 
 	private void Awake()
 	{
 		m_RB = GetComponent<Rigidbody2D>();
-        m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
+		m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
 		Debug.Assert(m_GroundSensor != null);
 	}
-    private void Update()
-    {
-        if (isDashing) { return; }
-    }
-
-    private void FixedUpdate()
-    {
-        m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
-
-        m_CoyoteTimer -= Time.fixedDeltaTime;
-        
+	private void Update()
+	{
 		if (isDashing) { return; }
+	}
 
-    }
+	private void FixedUpdate()
+	{
+		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
+		m_CoyoteTimer -= Time.fixedDeltaTime;
+
+		if (isDashing) { return; }
+	}
+
+	IEnumerator Jump(JumpStates jumpStates)
+	{
+		while (true)
+		{
+			switch (jumpStates) 
+			{ 
+				case JumpStates.Rising:
+                
+					if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0 )
+					{ 
+						m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse); 
+					}
+					break;
+				case JumpStates.Apex:
+					if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 00)
+					{
+						m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+					}
+					break;
+				case JumpStates.Falling:
+					if(m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
+					{
+                        m_RB.AddForce(Vector2.down * m_JumpStrength, ForceMode2D.Impulse);
+                    }
+					break;		
+			}
+			yield return new WaitForFixedUpdate();
+		}
+	}
+
     public void SetInMove(float newMove)
 	{
 		m_InMove = newMove;
@@ -149,19 +187,16 @@ public class CharacterMovement : MonoBehaviour
 
     public void StartJump()
 	{
-		//m_JumpBufferCountdown = m_JumpBufferTimer; 
-		//determine how far off ground player is to allow early or late input then jump
-		// Calculate how high rigibody is off the ground
-		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0 /* || m_JumpBufferCountdown > 0*/)
+
+		StartCoroutine(Jump(jumpStates));
+		
+		/*if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0  || m_JumpBufferCountdown > 0)
 		{
-				//m_JumpBufferCountdown -= Time.fixedDeltaTime;
+			
 				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);	
-			/*m_isJumping = true;
-			if(m_JumpBufferCountdown ==   m_JumpBufferTimer)
-			{
-				
-			}*/
-		}
+		
+		}*/
+
 	}
 	public void StopJump() 
 	{    
