@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +27,7 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_MoveSpeed;
 	[SerializeField] private float m_JumpStrength;
 
+	private PlayerController m_PlayerController;
 
 	[SerializeField] private TrailRenderer tr;
 	private bool canDash = true;
@@ -49,7 +51,13 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_CurrentSpeed;
 	[SerializeField] private float m_MaxSpeed;
 
-	private bool m_IsJumpBuffering;
+	[SerializeField] private float m_FallSpeed;
+	[SerializeField] private float m_MaxFallSpeed;
+	private float m_ApexPoint;
+	private float m_ApexSpeed;
+
+	private float m_JumpTimeCounter;
+
 	enum JumpStates
 	{
 		Rising,
@@ -64,6 +72,7 @@ public class CharacterMovement : MonoBehaviour
 		m_RB = GetComponent<Rigidbody2D>();
 		m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
 		Debug.Assert(m_GroundSensor != null);
+		m_PlayerController = GetComponent<PlayerController>();	
 	}
 	private void Update()
 	{
@@ -81,28 +90,37 @@ public class CharacterMovement : MonoBehaviour
 
 	IEnumerator Jump(JumpStates jumpStates)
 	{
-		while (true)
+        while (true)
 		{
 			switch (jumpStates) 
 			{ 
 				case JumpStates.Rising:
                 
-					if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0 )
-					{ 
-						m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse); 
-					}
+					//control speed of rise
+						Debug.Log("Jump Rising");
+					
 					break;
 				case JumpStates.Apex:
-					if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 00)
-					{
-						m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
-					}
+					// boost in speed when player hits jump apex, temporarily turn off gravity
+					m_RB.linearVelocityY = new Vector2(0.5, 20.f);
+					m_MaxSpeed = 30;
+
+                    //m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+                    Debug.Log("Jump Apex");
+					
 					break;
 				case JumpStates.Falling:
-					if(m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
-					{
-                        m_RB.AddForce(Vector2.down * m_JumpStrength, ForceMode2D.Impulse);
-                    }
+					//control fall speed, camera zoom in
+
+					m_RB.gravityScale = 0.5f;
+					m_MaxSpeed = 2f;
+					m_RB.linearVelocity = new Vector2(transform.localScale.y * m_MaxSpeed, 0);
+					//control speed off fall 
+					Camera.main.fieldOfView = 30;
+					m_MoveSpeed = 5;
+					Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
+						Debug.Log("Jump Falling");
+     
 					break;		
 			}
 			yield return new WaitForFixedUpdate();
@@ -184,28 +202,19 @@ public class CharacterMovement : MonoBehaviour
         canDash = true;
     }
 
-
     public void StartJump()
-	{
+	{	
+		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0  || m_isJumping == true)
+		{	
+				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+            m_JumpTimeCounter -= Time.deltaTime;
 
-		StartCoroutine(Jump(jumpStates));
-		
-		/*if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0  || m_JumpBufferCountdown > 0)
-		{
-			
-				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);	
-		
-		}*/
-
+				StartCoroutine(Jump(jumpStates));
+		}
 	}
 	public void StopJump() 
 	{    
-		/*if(!m_GroundSensor.HasDetectedHit() || m_CoyoteTimer < 0)
-		{
-				m_isJumping = false;
-			   m_JumpBufferCountdown = 0;
-		}
-		*/
+				m_isJumping = false;  
 	}
 
 

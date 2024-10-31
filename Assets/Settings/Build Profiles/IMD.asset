@@ -17,7 +17,11 @@ MonoBehaviour:
   m_PlatformId: 4e3c793746204150860bf175a9a41a05
   m_PlatformBuildProfile:
     rid: 1900463064979079450
-  m_Scenes: []
+  m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/PlayerController/Scene/Main Menu.unity
+  - m_enabled: 1
+    m_path: Assets/PlayerController/Scene/Testing Scene.unity
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
     m_Settings: []

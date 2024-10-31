@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private float m_JumpBufferCountdown;
 	private Coroutine m_cJumpBuffer;
 
+	[SerializeField] private Transform firingPoint;
+	[SerializeField] private GameObject bulletPrefab;
+
 	/*public void Init(int dummyServicRef)
 	{
 		m_ActionMap = new PlayerControls();	
@@ -109,7 +112,7 @@ public class PlayerController : MonoBehaviour
 		m_JumpBufferCountdown = m_JumpbufferTimer;
 
 		if(m_JumpBufferCountdown > 0) //could add condition where don't jump when grounded
-		{
+		{ 
 			StartCoroutine(C_JumpBuffer());
 		}
 	
@@ -129,6 +132,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
+	
 		m_Movement.StopJump();
 	}
 
@@ -150,6 +154,10 @@ public class PlayerController : MonoBehaviour
 		bullet.SetActive(true);
 
 		bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2, 0);
+		
+			//Instantiate(bulletPrefab, firingPoint.position, transform.rotation);
+			Debug.Log("Shooting");
+		
 	}
 
 	private void Handle_DashPreformed(InputAction.CallbackContext context)
