@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/PlayerController/Scene/Testing Scene.unity
     guid: 32a70a2cac012314bb210f9ade7ca25b
+  - enabled: 1
+    path: Assets/PlayerController/Scene/End Menu.unity
+    guid: adeb0d94e2bc2b24596c230a961b3bad
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -88,40 +88,47 @@ public class CharacterMovement : MonoBehaviour
 		if (isDashing) { return; }
 	}
 
-	IEnumerator Jump(JumpStates jumpStates)
+	IEnumerator Jump()
 	{
-        while (true)
+        while (!m_GroundSensor.HasDetectedHit())
 		{
 			switch (jumpStates) 
 			{ 
 				case JumpStates.Rising:
-                
-					//control speed of rise
-						Debug.Log("Jump Rising");
-					
+                    //control speed of rise
+                    Debug.Log("Jump Rising");
+					m_RB.gravityScale = 1 ;
+
+					if (m_RB.linearVelocityY < 0)
+					{
+						jumpStates = JumpStates.Apex;
+					}
+
 					break;
 				case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
-					m_RB.linearVelocityY = new Vector2(0.5, 20.f);
+					//m_RB.linearVelocityY = new Vector2(0.5, 20.f);
 					m_MaxSpeed = 30;
-
                     //m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
                     Debug.Log("Jump Apex");
-					
-					break;
-				case JumpStates.Falling:
-					//control fall speed, camera zoom in
+                    m_RB.gravityScale = 0.5f;
 
-					m_RB.gravityScale = 0.5f;
-					m_MaxSpeed = 2f;
-					m_RB.linearVelocity = new Vector2(transform.localScale.y * m_MaxSpeed, 0);
+
+                    if (m_RB.linearVelocityY < -2)
+                    {
+                        jumpStates = JumpStates.Falling;
+                    }
+                    break;
+				case JumpStates.Falling:
+                    //control fall speed, camera zoom in
+                    m_RB.gravityScale = 2f;
+					//m_RB.linearVelocity = new Vector2(transform.localScale.y * m_MaxSpeed, 0);
 					//control speed off fall 
 					Camera.main.fieldOfView = 30;
 					m_MoveSpeed = 5;
-					Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
+					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
 						Debug.Log("Jump Falling");
-     
-					break;		
+					break;
 			}
 			yield return new WaitForFixedUpdate();
 		}
@@ -179,11 +186,8 @@ public class CharacterMovement : MonoBehaviour
     }
 	public void StartDash()
 	{
-        if (canDash)
-        {
             Debug.Log("IsDashing");
             StartCoroutine(Dash());
-        }
     }
 
     private IEnumerator Dash()
@@ -206,25 +210,23 @@ public class CharacterMovement : MonoBehaviour
 	{	
 		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0  || m_isJumping == true)
 		{	
-				m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
             m_JumpTimeCounter -= Time.deltaTime;
 
-				StartCoroutine(Jump(jumpStates));
+			StartCoroutine(Jump());
 		}
 	}
 	public void StopJump() 
 	{    
-				m_isJumping = false;  
+		m_isJumping = false;
+		jumpStates = JumpStates.Falling;
 	}
-
-
     private void OnCollisionExit2D(Collision2D collision)
     {
         if(m_RB.linearVelocityY <= 0)
 		{
 			m_CoyoteTimer = m_CoyoteThresHold;
 		}
-
 		//const float ySize = 100.0f;
 		
         //m_CapsuleCollider.size = new Vector2(0.5f, 1);
