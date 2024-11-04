@@ -232,12 +232,12 @@ public class CharacterMovement : MonoBehaviour
 		//const float ySize = 100.0f;
 		
         
-		m.size = new Vector2(0.5f, 1);
+		//m_BoxCollider2D.size = new Vector2(0.5f, 1);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        m_BoxCollider2D.size = new Vector2(1, 1.32f);
+       // m_BoxCollider2D.size = new Vector2(1, 1.32f);
     }
 
 }

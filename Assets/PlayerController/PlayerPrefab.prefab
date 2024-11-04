@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de5457bbdd14e842b5a6928e26b3331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CapsuleCollider: {fileID: 0}
+  m_BoxCollider2D: {fileID: 0}
   m_GroundSensor: {fileID: 2938755533799335079}
   m_MoveSpeed: 5
   m_JumpStrength: 10
@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00dec0f14c2b344f85ee58490ac8a73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CapsuleCollider: {fileID: 0}
+  m_BoxCollider: {fileID: 3934838471121704584}
   m_Rigidbody: {fileID: 969958807700409231}
   m_ShrinkSize: {x: 0, y: 0}
 --- !u!61 &3934838471121704584
