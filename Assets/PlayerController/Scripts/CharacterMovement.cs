@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class CharacterMovement : MonoBehaviour
 	 */
 
 	private Rigidbody2D m_RB;
-	[SerializeField] CapsuleCollider2D m_CapsuleCollider;
+	[SerializeField] BoxCollider2D m_BoxCollider2D;
 
 	[SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
 	[SerializeField] private float m_MoveSpeed;
@@ -70,8 +71,8 @@ public class CharacterMovement : MonoBehaviour
 	private void Awake()
 	{
 		m_RB = GetComponent<Rigidbody2D>();
-		m_CapsuleCollider = GetComponent<CapsuleCollider2D>();
-		Debug.Assert(m_GroundSensor != null);
+		m_BoxCollider2D = GetComponent<BoxCollider2D>();
+		//Debug.Assert(m_GroundSensor != null);
 		m_PlayerController = GetComponent<PlayerController>();	
 	}
 	private void Update()
@@ -96,10 +97,10 @@ public class CharacterMovement : MonoBehaviour
 			{ 
 				case JumpStates.Rising:
                     //control speed of rise
-                    Debug.Log("Jump Rising");
+                   // Debug.Log("Rising");
 					m_RB.gravityScale = 1 ;
-
-					if (m_RB.linearVelocityY < 0)
+                    m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+                    if (m_RB.linearVelocityY < 0)
 					{
 						jumpStates = JumpStates.Apex;
 					}
@@ -110,12 +111,13 @@ public class CharacterMovement : MonoBehaviour
 					//m_RB.linearVelocityY = new Vector2(0.5, 20.f);
 					m_MaxSpeed = 30;
                     //m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
-                    Debug.Log("Jump Apex");
+                   
                     m_RB.gravityScale = 0.5f;
 
 
                     if (m_RB.linearVelocityY < -2)
                     {
+                      //  Debug.Log("Jump Apex");
                         jumpStates = JumpStates.Falling;
                     }
                     break;
@@ -127,7 +129,7 @@ public class CharacterMovement : MonoBehaviour
 					Camera.main.fieldOfView = 30;
 					m_MoveSpeed = 5;
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
-						Debug.Log("Jump Falling");
+						//Debug.Log("Jump Falling");
 					break;
 			}
 			yield return new WaitForFixedUpdate();
@@ -178,15 +180,15 @@ public class CharacterMovement : MonoBehaviour
     }
 	public void StartCrouch()
 	{
-		Debug.Log("Crouch pressed---------------------");
+		//Debug.Log("Crouch pressed---------------------");
 	}
 	public void StopCrouch() 
 	{
-        Debug.Log("Crouch not pressed---------------------");
+       // Debug.Log("Crouch not pressed---------------------");
     }
 	public void StartDash()
 	{
-            Debug.Log("IsDashing");
+          //  Debug.Log("IsDashing");
             StartCoroutine(Dash());
     }
 
@@ -229,12 +231,13 @@ public class CharacterMovement : MonoBehaviour
 		}
 		//const float ySize = 100.0f;
 		
-        //m_CapsuleCollider.size = new Vector2(0.5f, 1);
+        
+		m.size = new Vector2(0.5f, 1);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-		//m_CapsuleCollider.size = new Vector2(1, 1);
+        m_BoxCollider2D.size = new Vector2(1, 1.32f);
     }
 
 }
