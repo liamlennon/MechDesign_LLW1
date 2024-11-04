@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +20,7 @@ public class CharacterMovement : MonoBehaviour
 	Relaxed Semi-Solids
 	Variable Jump Strength
 	 */
-
+	
 	private Rigidbody2D m_RB;
 	[SerializeField] BoxCollider2D m_BoxCollider2D;
 
@@ -43,6 +43,8 @@ public class CharacterMovement : MonoBehaviour
 
 	private bool m_IsMoving;
 	private Coroutine m_CMoveUpdate;
+
+	private bool isFacingRight = true;
 
 	private float m_InMove;
 	[SerializeField] private float m_CoyoteTimer;
@@ -83,13 +85,19 @@ public class CharacterMovement : MonoBehaviour
 	private void FixedUpdate()
 	{
 		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
-
 		m_CoyoteTimer -= Time.fixedDeltaTime;
-
 		if (isDashing) { return; }
 	}
 
-	IEnumerator Jump()
+	private void Flip ()
+	{ 
+		isFacingRight = !isFacingRight;
+		Vector3 localScale = transform.localScale;
+		localScale.x *= -1;
+		transform.localScale = localScale;
+	}
+
+	IEnumerator JumpApex()
 	{
         while (!m_GroundSensor.HasDetectedHit())
 		{
@@ -97,27 +105,22 @@ public class CharacterMovement : MonoBehaviour
 			{ 
 				case JumpStates.Rising:
                     //control speed of rise
-                   // Debug.Log("Rising");
 					m_RB.gravityScale = 1 ;
-                    m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+					Debug.Log("Rising");
                     if (m_RB.linearVelocityY < 0)
 					{
 						jumpStates = JumpStates.Apex;
-					}
-
+                    }
 					break;
 				case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
 					//m_RB.linearVelocityY = new Vector2(0.5, 20.f);
 					m_MaxSpeed = 30;
                     //m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
-                   
                     m_RB.gravityScale = 0.5f;
-
-
-                    if (m_RB.linearVelocityY < -2)
+                    if (m_RB.linearVelocityY <-2)
                     {
-                      //  Debug.Log("Jump Apex");
+                         Debug.Log("Jump Apex");
                         jumpStates = JumpStates.Falling;
                     }
                     break;
@@ -129,7 +132,7 @@ public class CharacterMovement : MonoBehaviour
 					Camera.main.fieldOfView = 30;
 					m_MoveSpeed = 5;
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
-						//Debug.Log("Jump Falling");
+						Debug.Log("Jump Falling");
 					break;
 			}
 			yield return new WaitForFixedUpdate();
@@ -139,6 +142,7 @@ public class CharacterMovement : MonoBehaviour
     public void SetInMove(float newMove)
 	{
 		m_InMove = newMove;
+		Flip();
 		if(m_MoveSpeed == m_MaxSpeed)
 		{
 			m_RB.gameObject.SetActive(false);
@@ -147,14 +151,13 @@ public class CharacterMovement : MonoBehaviour
 		{
 			//we are stopped;
 			if (!m_IsMoving) { return; }
-
-			m_IsMoving = false;
+            Flip();
+            m_IsMoving = false;
 		}
 		else
 		{
 			// we are moving
 			if (m_IsMoving) { return; }
-
 			m_IsMoving = true;
 			m_CMoveUpdate = StartCoroutine(C_MoveUpdate());
 		}
@@ -214,14 +217,15 @@ public class CharacterMovement : MonoBehaviour
 		{	
 			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
             m_JumpTimeCounter -= Time.deltaTime;
-
-			StartCoroutine(Jump());
+			StartCoroutine(JumpApex());
 		}
 	}
+
+
 	public void StopJump() 
 	{    
 		m_isJumping = false;
-		jumpStates = JumpStates.Falling;
+		jumpStates = Falling;
 	}
     private void OnCollisionExit2D(Collision2D collision)
     {

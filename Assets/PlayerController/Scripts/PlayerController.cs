@@ -175,6 +175,7 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_OnDead(MonoBehaviour causer) 
 	{
+	
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
