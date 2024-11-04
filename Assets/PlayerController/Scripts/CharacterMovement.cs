@@ -89,7 +89,7 @@ public class CharacterMovement : MonoBehaviour
 		if (isDashing) { return; }
 	}
 
-	private void Flip ()
+	private void Flip()
 	{ 
 		isFacingRight = !isFacingRight;
 		Vector3 localScale = transform.localScale;

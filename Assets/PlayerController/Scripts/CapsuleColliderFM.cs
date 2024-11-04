@@ -7,6 +7,7 @@ public class CapsuleColliderFM : MonoBehaviour
     private Vector2 m_DefaultSize;
     [SerializeField] private Vector2 m_ShrinkSize;
 
+
     private void Awake()
     {
 

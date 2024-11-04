@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 929667974029550097}
   - component: {fileID: 7287660109704455578}
   - component: {fileID: 764845105098609497}
+  - component: {fileID: 2544861021953893141}
   m_Layer: 6
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -225,6 +226,26 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2544861021953893141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667636342438995758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce07cd71f1cb266438188ffeda6fad1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 1667636342438995758}
+  m_HealthBar: {fileID: 0}
+  m_LowHealthEffect: {fileID: 0}
+  m_HasHealthBar: 1
+  m_MaxHealth: 100
+  m_CurrentHealth: 0
+  damageAlpha: 0.3
+  damageFadeSpeed: 3
 --- !u!1 &2062927974038001864
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +256,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5406072704542687043}
   - component: {fileID: 3852861265105310247}
-  - component: {fileID: 3934838471121704584}
   m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
@@ -270,55 +290,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00dec0f14c2b344f85ee58490ac8a73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BoxCollider: {fileID: 3934838471121704584}
+  m_BoxCollider: {fileID: 0}
   m_Rigidbody: {fileID: 969958807700409231}
   m_ShrinkSize: {x: 0, y: 0}
---- !u!61 &3934838471121704584
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062927974038001864}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1.32}
-  m_EdgeRadius: 0
 --- !u!1 &6013075500262283774
 GameObject:
   m_ObjectHideFlags: 0
