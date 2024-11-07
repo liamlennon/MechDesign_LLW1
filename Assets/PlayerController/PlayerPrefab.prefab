@@ -240,10 +240,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 1667636342438995758}
   m_HealthBar: {fileID: 0}
-  m_LowHealthEffect: {fileID: 0}
   m_HasHealthBar: 1
   m_MaxHealth: 100
   m_CurrentHealth: 0
+  m_HealthEffect: {fileID: 0}
   damageAlpha: 0.3
   damageFadeSpeed: 3
 --- !u!1 &2062927974038001864
