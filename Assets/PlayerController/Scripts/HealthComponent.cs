@@ -18,10 +18,17 @@ public class HealthComponent : MonoBehaviour, IDamageable
     [SerializeField] private float damageAlpha = 0.3f, damageFadeSpeed = 3f;
 
 
-    private void Awake()
+    private void Start()
     {
         m_CurrentHealth = m_MaxHealth;
     }
+
+    public void Awake()
+    {
+        
+    }
+
+
     private void Update()
     {
         if (m_HasHealthBar)

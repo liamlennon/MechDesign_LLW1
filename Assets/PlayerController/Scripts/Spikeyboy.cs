@@ -12,7 +12,7 @@ public class Spikeyboy : MonoBehaviour
         SpikeTrap.ApplyDamage(m_DamageAmount, this);
 
         //(gameObject.tag = "Player")
-        Rigidbody2D m_SB = m_CharacterMovement.GetComponent<Rigidbody2D>();
-        m_SB.AddForce(Vector2.up * 2, ForceMode2D.Impulse); 
+        /*Rigidbody2D m_SB = m_CharacterMovement.GetComponent<Rigidbody2D>();
+        m_SB.AddForce(Vector2.up * 2, ForceMode2D.Impulse);*/ 
     }
 }
