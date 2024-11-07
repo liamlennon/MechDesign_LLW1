@@ -7,7 +7,7 @@ public class GameEnd : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            SceneManager.LoadSceneAsync("End Menu");
+               ;
         }
     }
 }
