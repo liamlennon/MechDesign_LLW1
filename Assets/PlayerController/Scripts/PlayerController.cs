@@ -45,6 +45,9 @@ public class PlayerController : MonoBehaviour
 		m_Movement = GetComponent<CharacterMovement>();
 		m_HealthComponent = GetComponent<HealthComponent>();
 		m_Sensor = GetComponent<StatefulRaycastSensor2D>();
+
+		m_HealthComponent = GetComponent<HealthComponent>();
+		Debug.Assert(m_HealthComponent != null);
 	
 	} 
 
@@ -153,7 +156,7 @@ public class PlayerController : MonoBehaviour
 
 		bullet.SetActive(true);
 
-		bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2, 0);
+		bullet.transform.position = new Vector3(transform.position.z,  transform.position.y + 2, 0);
 		
 			//Instantiate(bulletPrefab, firingPoint.position, transform.rotation);
 			Debug.Log("Shooting");
@@ -168,6 +171,12 @@ public class PlayerController : MonoBehaviour
 	private void Handle_DashCancelled(InputAction.CallbackContext context) 
 	{ 	
 	}
+
+	public void Init()
+	{
+		Debug.Log("initilized Player Controller");
+	}
+
     private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
 	{
 		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
