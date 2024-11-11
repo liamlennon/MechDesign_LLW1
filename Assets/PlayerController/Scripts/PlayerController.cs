@@ -93,13 +93,6 @@ public class PlayerController : MonoBehaviour
 		m_HealthComponent.OnDamage -= Handle_HealhDamage;
 		m_HealthComponent.OnDeath -= Handle_OnDead;	
     }
-    private IEnumerator C_MovedUpdate()
-	{
-		while(m_InMoveActive)
-		{
-			yield return new WaitForSeconds(5f);
-		}
-	}
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
 	{

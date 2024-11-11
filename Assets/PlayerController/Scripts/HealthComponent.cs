@@ -31,10 +31,10 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if (m_HasHealthBar)
-        {
-            m_HealthBar.fillAmount = m_CurrentHealth / 100;
-        }
+        //if (m_HasHealthBar)
+        //{
+        //    m_HealthBar.fillAmount = m_CurrentHealth / 100;
+        //}
 
         //if (m_LowHealthEffect.color.a != 0)
         //{

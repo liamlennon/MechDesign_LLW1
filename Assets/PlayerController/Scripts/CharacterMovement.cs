@@ -33,7 +33,7 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private TrailRenderer tr;
 	private bool canDash = true;
 	private bool isDashing;
-	private float dashingPower = 22224f;
+	[SerializeField] float dashingPower;
 	private float dashingTime = 0.2f;
 	private float dashingCooldown = 1f;
 
@@ -43,6 +43,7 @@ public class CharacterMovement : MonoBehaviour
 
 	private bool m_IsMoving;
 	private Coroutine m_CMove;
+	private Coroutine m_CDash;
 
 	private bool isFacingRight = true;
 
@@ -87,7 +88,7 @@ public class CharacterMovement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
 		m_CoyoteTimer -= Time.fixedDeltaTime;
 		if (isDashing) { return; }
 	}
@@ -169,7 +170,11 @@ public class CharacterMovement : MonoBehaviour
 	{
 		while (m_IsMoving)
 		{
-			m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+			if (!isDashing)
+			{
+				m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+			}
+
 			if (m_CurrentSpeed == m_MaxSpeed)
 			{
 
@@ -177,7 +182,9 @@ public class CharacterMovement : MonoBehaviour
 			}
 			yield return new WaitForFixedUpdate();
 		}
+
 		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
+
 	}
 	public void StartCrouch()
 	{
@@ -190,23 +197,28 @@ public class CharacterMovement : MonoBehaviour
 	public void StartDash()
 	{
 		//  Debug.Log("IsDashing");
-		StartCoroutine(Dash());
+		if(isDashing == false)
+		{
+            m_CDash = StartCoroutine(Dash());
+        }
+		
 	}
 
 	private IEnumerator Dash()
 	{
-		canDash = false;
+		
 		isDashing = true;
 		float originalGravity = m_RB.gravityScale;
 		m_RB.gravityScale = 0f;
-		m_RB.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
+		//m_RB.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
+		m_RB.AddForce(new Vector2(m_InMove * dashingPower, 0), ForceMode2D.Impulse);
 		tr.emitting = true;
-		yield return new WaitForSeconds(dashingTime);
+		yield return new WaitForSeconds(1);
 		tr.emitting = false;
 		m_RB.gravityScale = originalGravity;
 		isDashing = false;
-		yield return new WaitForSeconds(dashingCooldown);
-		canDash = true;
+		yield return new WaitForSeconds(1);
+		
 	}
 
 	public void StartJump()
