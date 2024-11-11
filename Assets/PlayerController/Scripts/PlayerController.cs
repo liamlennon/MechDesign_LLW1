@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
 
 		bullet.SetActive(true);
 
-		bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2, 0);
+		bullet.transform.position = new Vector3(transform.position.z,  transform.position.y + 2, 0);
 		
 			//Instantiate(bulletPrefab, firingPoint.position, transform.rotation);
 			Debug.Log("Shooting");

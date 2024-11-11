@@ -56,6 +56,9 @@ public class CharacterMovement : MonoBehaviour
 
 	[SerializeField] private float m_FallSpeed;
 	[SerializeField] private float m_MaxFallSpeed;
+
+	[SerializeField] private float m_GroundMoveSpeed;
+	[SerializeField] private float A;
 	private float m_ApexPoint;
 	private float m_ApexSpeed;
 
