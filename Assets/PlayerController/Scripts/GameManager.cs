@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerController m_PlayerController;
     private PlayerController m_PlayerRef;
-
+    [SerializeField] private TextMeshProUGUI m_ScoreUI;
     int dummyServicRef;
 
     private int m_CurrentScore = 1;
@@ -32,8 +33,9 @@ public class GameManager : MonoBehaviour
 
     private void Handle_RecievePoints(int points) 
     {
-        points += 1;
-        Debug.Log($"The current score is: {m_CurrentScore}");
+        m_CurrentScore += points;
+
+       m_ScoreUI.text =$"The current score is: {m_CurrentScore}";
     }
 
     //IEnumerable Start()

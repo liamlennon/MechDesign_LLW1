@@ -7,7 +7,8 @@ public class Coin : MonoBehaviour
 {
     [SerializeField] private int m_ScorePoint;
     //[SerializeField] private TextMeshProUGUI m_CollectableText;
-    //private AudioSource m_Collected;
+    [SerializeField] private AudioSource m_Collected;
+    [SerializeField] private SpriteRenderer m_Sprite;
 //    [SerializeField] GameObject m_CoinParticle;
 
    /* private void Start()
@@ -17,14 +18,20 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameManager.OnGainPoints?.Invoke(m_ScorePoint);
-       // m_CollectableText.text = m_ScorePoint.ToString();
-        //Instantiate(m_CoinParticle, transform.position, Quaternion.identity);
-        Destroy(gameObject);
-       // OnDestroy();
-    }
-    private void OnDestroy()
-    {
-        //m_Collected.Play();
+        if (collision.CompareTag("Player"))
+        {
+            GameManager.OnGainPoints?.Invoke(m_ScorePoint);
+            // m_CollectableText.text = m_ScorePoint.ToString();
+            //Instantiate(m_CoinParticle, transform.position, Quaternion.identity);
+
+
+            //turn of the collider and Sprite
+            m_Collected.Play();
+
+            m_Sprite.enabled = false;
+
+            Destroy(this.gameObject, 2f);
+           // OnDestroy();
+        }
     }
 }

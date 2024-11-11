@@ -104,6 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ScorePoint: 1
+  m_Collected: {fileID: 1033881080885888746}
+  m_Sprite: {fileID: 4897568524676796556}
 --- !u!95 &2719938331482701421
 Animator:
   serializedVersion: 7
@@ -253,7 +255,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0

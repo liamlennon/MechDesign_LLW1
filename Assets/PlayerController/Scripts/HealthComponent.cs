@@ -36,11 +36,11 @@ public class HealthComponent : MonoBehaviour, IDamageable
             m_HealthBar.fillAmount = m_CurrentHealth / 100;
         }
 
-        if (m_LowHealthEffect.color.a != 0)
-        {
-            m_LowHealthEffect.color = new Color(m_LowHealthEffect.color.r, m_LowHealthEffect.color.g, m_LowHealthEffect.color.b, Mathf.MoveTowards(m_LowHealthEffect.color.a, 0f,
-            damageFadeSpeed * Time.deltaTime));
-        }
+        //if (m_LowHealthEffect.color.a != 0)
+        //{
+        //    m_LowHealthEffect.color = new Color(m_LowHealthEffect.color.r, m_LowHealthEffect.color.g, m_LowHealthEffect.color.b, Mathf.MoveTowards(m_LowHealthEffect.color.a, 0f,
+        //    damageFadeSpeed * Time.deltaTime));
+        //}
     }
 
     public void ApplyDamage(float damage, MonoBehaviour causer)
