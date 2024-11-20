@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b283c9a4132404c8b6d48875b78b06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Sensor: {fileID: 0}
+  m_Sensor: {fileID: 2938755533799335079}
   Rigidbody2D: {fileID: 969958807700409231}
   m_ObjectPooler: {fileID: 0}
   m_JumpbufferTimer: 0.5
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 1667636342438995758}
-  m_HealthBar: {fileID: 3357347694658717632, guid: 4d84c32857259124fb7c7a6306a612e3, type: 3}
+  m_HealthBar: {fileID: 0}
   m_LowHealthEffect: {fileID: 0}
   m_HasHealthBar: 0
   m_MaxHealth: 100

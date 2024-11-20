@@ -4,42 +4,53 @@ using UnityEngine;
 
 public class EnemyPatrol : MonoBehaviour
 {
-    public GameObject pointA;
-    public GameObject pointB;
-    private Rigidbody2D eRB;
-    private Transform currentPoint;
-    public float speed;
+    public GameObject m_PointA;
+    public GameObject m_PointB;
+    private Rigidbody2D m_EnemyRB;
+    private Transform m_CurrentPoint;
+    public StatefulRaycastSensor2D m_EnemySensor;
+    public float m_Speed;
+    [SerializeField] private float m_Damage;
+
     void Start()
     {
-        eRB = GetComponent<Rigidbody2D>();
-        currentPoint = pointB.transform;
+         m_EnemyRB = GetComponent<Rigidbody2D>();
+        m_CurrentPoint = m_PointB.transform;
         
     }
     // Update is called once per frame
     void Update()
     {
-        Vector2 point = currentPoint.position - transform.position;
-        if(currentPoint == pointB.transform)
+        Vector2 point = m_CurrentPoint.position - transform.position;
+        if(m_CurrentPoint == m_PointB.transform)
         {
-            eRB.linearVelocity = new Vector2(speed, 0);
+            m_EnemyRB.linearVelocity = new Vector2(m_Speed, 0);
         }
         else
         {
-            eRB.linearVelocity = new Vector2 (-speed, 0);
+            m_EnemyRB.linearVelocity = new Vector2(m_Speed, 0);
         }
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointB.transform) 
+        if (Vector2.Distance(transform.position, m_CurrentPoint.position) < 0.5f && m_CurrentPoint == m_PointB.transform) 
         {
-            currentPoint = pointA.transform;
+            m_CurrentPoint = m_PointB.transform;
         }
-        if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f && currentPoint == pointA.transform)
+        if (Vector2.Distance(transform.position, m_CurrentPoint.position) < 0.5f && m_CurrentPoint == m_PointB.transform)
         {
-            currentPoint = pointB.transform;
+            m_CurrentPoint = m_PointB.transform;    
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        IDamageable Enemy = collision.GetComponentInParent<IDamageable>();
+        if (Enemy == null) { return; }
+        Enemy.ApplyDamage(m_Damage, this);
+    }
+
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(pointA.transform.position, 0.5f);
-        Gizmos.DrawWireSphere(pointB.transform.position, 0.5f);
+        Gizmos.DrawWireSphere(m_PointA.transform.position, 0.5f);
+        Gizmos.DrawWireSphere(m_PointB.transform.position, 0.5f);
     }
 
 }

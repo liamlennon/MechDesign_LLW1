@@ -197,16 +197,16 @@ public class CharacterMovement : MonoBehaviour
 	public void StartDash()
 	{
 		//  Debug.Log("IsDashing");
-		if(isDashing == false)
+		if (isDashing == false)
 		{
-            m_CDash = StartCoroutine(Dash());
-        }
-		
+			m_CDash = StartCoroutine(Dash());
+		}
+
 	}
 
 	private IEnumerator Dash()
 	{
-		
+
 		isDashing = true;
 		float originalGravity = m_RB.gravityScale;
 		m_RB.gravityScale = 0f;
@@ -218,7 +218,7 @@ public class CharacterMovement : MonoBehaviour
 		m_RB.gravityScale = originalGravity;
 		isDashing = false;
 		yield return new WaitForSeconds(1);
-		
+
 	}
 
 	public void StartJump()
@@ -244,5 +244,11 @@ public class CharacterMovement : MonoBehaviour
 		}
 	}
 
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if (collision.gameObject.tag == "Weak Point")
+		{
+			Destroy(collision.gameObject);
+		}
+	}
 }
-

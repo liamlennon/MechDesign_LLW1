@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Collectable
+  - Weak Point
   layers:
   - Default
   - TransparentFX

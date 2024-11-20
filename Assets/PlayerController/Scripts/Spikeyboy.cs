@@ -9,8 +9,6 @@ public class Spikeyboy : MonoBehaviour
     {
         IDamageable SpikeTrap = collision.GetComponentInParent<IDamageable>();
         if (SpikeTrap == null ) { return; }
-        SpikeTrap.ApplyDamage(m_DamageAmount, this);
-
-         
+        SpikeTrap.ApplyDamage(m_DamageAmount, this); 
     }
 }
