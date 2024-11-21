@@ -38,12 +38,15 @@ public class CharacterMovement : MonoBehaviour
 	private float dashingCooldown = 1f;
 
 	private bool m_isJumping;
+	private bool m_CanCoyote;
 	//[SerializeField] private float m_JumpBufferTimer = 0.5f;
 	//[SerializeField] private float m_JumpBufferCountdown;
 
 	private bool m_IsMoving;
 	private Coroutine m_CMove;
 	private Coroutine m_CDash;
+	private Coroutine m_CJumpbuff;
+	private Coroutine m_CoyoteTimeCoroutine;
 
 	private bool isFacingRight = true;
 
@@ -62,10 +65,12 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float A;
 	private float m_ApexPoint;
 	private float m_ApexSpeed;
-
 	private float m_JumpTimeCounter;
 
-	enum JumpStates
+    [SerializeField] private float m_JumpbufferTimer = 0.5f;
+	[SerializeField] private float m_JumpBufferThreshold;
+
+    enum JumpStates
 	{
 		Rising,
 		Apex,
@@ -87,9 +92,7 @@ public class CharacterMovement : MonoBehaviour
 	}
 
 	private void FixedUpdate()
-	{
-
-		m_CoyoteTimer -= Time.fixedDeltaTime;
+	{		
 		if (isDashing) { return; }
 	}
 
@@ -116,7 +119,7 @@ public class CharacterMovement : MonoBehaviour
 						jumpStates = JumpStates.Apex;
 					}
 					break;
-				case JumpStates.Apex:
+					case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
 					//m_RB.linearVelocityY = new Vector2(0.5, 20.f);
 					m_MaxSpeed = 30;
@@ -220,13 +223,30 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StartJump()
 	{
-		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0 || m_isJumping == true)
+
+        if (m_GroundSensor.HasDetectedHit() || m_isJumping == true)
 		{
 			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
 			m_JumpTimeCounter -= Time.deltaTime;
 			StartCoroutine(JumpApex());
 		}
+		else
+		{
+			Debug.Log("jump buffer hit");
+			m_JumpbufferTimer = m_JumpBufferThreshold; 
+			m_CJumpbuff = StartCoroutine(C_JumpBuffer());
+		}
 	}
+
+	IEnumerator C_JumpBuffer()
+	{
+		while (m_JumpbufferTimer >= 0)
+		{
+			m_JumpbufferTimer -= Time.deltaTime;
+			yield return null;
+        }
+    }
+
 	public void StopJump()
 	{
 		m_isJumping = false;
@@ -234,19 +254,37 @@ public class CharacterMovement : MonoBehaviour
 	}
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-		if (m_RB.linearVelocityY <= 0)
+        m_CoyoteTimer = m_CoyoteThresHold;
+
+        if (m_RB.linearVelocityY <= 0 || m_CoyoteTimer > 0)
 		{
-			m_CoyoteTimer = m_CoyoteThresHold;
-		}
+            m_CoyoteTimeCoroutine = StartCoroutine(CoyoteCouritne());
+        }
 	}
+	private IEnumerator CoyoteCouritne()
+	{
+		m_CanCoyote = true;
+		m_CoyoteTimer -= Time.fixedDeltaTime;
+		new WaitForSeconds(m_CoyoteTimer);
+		m_CanCoyote = true;
+	    yield return null;
+	}
+
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-        if (collision.gameObject.CompareTag("Spike"))
+        
+		
+		
+		if (collision.gameObject.CompareTag("Spike"))
         {
 			Vector2 bounceDirct = -collision.contacts[0].normal;
-
             m_RB.linearVelocity = Vector2.zero;
 			m_RB.AddForce(bounceDirct * m_BounceForce, ForceMode2D.Impulse);
+        }
+		if (m_JumpbufferTimer > 0)
+		{
+            m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+			m_JumpbufferTimer = 0;
         }
     }
 }

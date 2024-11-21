@@ -97,6 +97,8 @@ MonoBehaviour:
   m_MaxFallSpeed: 0
   m_GroundMoveSpeed: 0
   A: 0
+  m_JumpbufferTimer: 0
+  m_JumpBufferThreshold: 0.2
 --- !u!114 &7287660109704455578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,9 +112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirePoint: {fileID: 1673640109741036677}
-  m_ObjectPooler: {fileID: 0}
-  m_JumpbufferTimer: 0.5
-  m_JumpBufferCountdown: 0
   m_FireWeaponSound: {fileID: 0}
 --- !u!96 &764845105098609497
 TrailRenderer:

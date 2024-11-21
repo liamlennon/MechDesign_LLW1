@@ -14,14 +14,14 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] private Transform m_FirePoint;
 
 	private HealthComponent m_HealthComponent;
-	[SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
+	private DesignPatterns_ObjectPooler m_ObjectPooler;
 
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
-	[SerializeField] private float m_JumpbufferTimer = 0.5f;
-	[SerializeField] private float m_JumpBufferCountdown;
-	private bool m_IsJumping;
+	//[SerializeField] private float m_JumpbufferTimer = 0.5f;
+	//[SerializeField] private float m_JumpBufferCountdown;
+	//private bool m_IsJumping;
 	private Coroutine m_cJumpBuffer;
 
 	[SerializeField] private AudioSource m_FireWeaponSound;
@@ -111,24 +111,24 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
 	{
-		m_JumpBufferCountdown = m_JumpbufferTimer;
+		//m_JumpBufferCountdown = m_JumpbufferTimer;
 
-		if(m_JumpBufferCountdown > 0) 
-		{
-			C_JumpBuffer();
-		}
+		//if(m_JumpBufferCountdown > 0) 
+		//{
+		//	C_JumpBuffer();
+		//}
 
 		m_Movement.StartJump();
 		//maybe use while loop. While jump buffering is greater than 0 execute jump function
 	}
 
-	private IEnumerator C_JumpBuffer()
-	{
-		m_IsJumping = true;
-		yield return new WaitForSeconds(m_JumpBufferCountdown);
-		m_Movement.StartJump();
-		m_IsJumping = false;
-	}
+	//private IEnumerator C_JumpBuffer()
+	//{
+	//	m_IsJumping = true;
+	//	yield return new WaitForSeconds(m_JumpBufferCountdown);
+	//	m_Movement.StartJump();
+	//	m_IsJumping = false;
+	//}
 
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
@@ -157,8 +157,10 @@ public class PlayerController : MonoBehaviour
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
 	}
 
-	public void Init()
+	public void Init(DesignPatterns_ObjectPooler poolerRef)
 	{
 		Debug.Log("initilized Player Controller");
-	}
+        m_ObjectPooler = poolerRef;
+
+    }
 }
