@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
 	private void OnEnable()
 	{
-		m_ActionMap.Enable();
+		m_ActionMap.Enable();	
 
 		m_ActionMap.Default.MoveHoriz.performed += Handle_MovePerformed;
 		m_ActionMap.Default.MoveHoriz.canceled += Handle_MoveCancelled;
