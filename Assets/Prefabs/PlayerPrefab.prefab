@@ -81,7 +81,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de5457bbdd14e842b5a6928e26b3331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BoxCollider2D: {fileID: 0}
+  m_BoxCollider2D: {fileID: 4818670366701293570}
+  m_BounceForce: 10
   m_GroundSensor: {fileID: 2938755533799335079}
   m_MoveSpeed: 5
   m_JumpStrength: 10

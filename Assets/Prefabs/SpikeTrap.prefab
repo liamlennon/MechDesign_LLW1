@@ -148,4 +148,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_DamageAmount: 5
-  m_BounceForce: 10
