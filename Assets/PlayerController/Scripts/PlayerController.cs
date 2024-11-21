@@ -1,54 +1,37 @@
 using System.Collections;
 using System.Data.SqlTypes;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
-[RequireComponent (typeof(CharacterMovement))]
+[RequireComponent(typeof(CharacterMovement))]
 public class PlayerController : MonoBehaviour
 {
 	private PlayerControls m_ActionMap;
 	private CharacterMovement m_Movement;
-	public	StatefulRaycastSensor2D m_Sensor;
 
-	private GameObject m_Character;
+	[SerializeField] private Transform m_FirePoint;
 
-	[SerializeField] Rigidbody2D Rigidbody2D;
-
-    private HealthComponent m_HealthComponent;
+	private HealthComponent m_HealthComponent;
+	[SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
 
 	private bool m_InMoveActive = false;
 	private Coroutine m_cMovement;
 
-	[SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
-
 	[SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferCountdown;
+	private bool m_IsJumping;
 	private Coroutine m_cJumpBuffer;
 
-	[SerializeField] private Transform firingPoint;
-	[SerializeField] private GameObject bulletPrefab;
+	[SerializeField] private AudioSource m_FireWeaponSound;
 
-	/*public void Init(int dummyServicRef)
-	{
-		m_ActionMap = new PlayerControls();	
-		m_Movement = GetComponent<CharacterMovement>();
-		//m_Movement.Init();
-	}
-   */ private void Awake()
+	
+    private void Awake()
 	{
 		m_ActionMap = new PlayerControls();
 		m_Movement = GetComponent<CharacterMovement>();
-		m_HealthComponent = GetComponent<HealthComponent>();
-		m_Sensor = GetComponent<StatefulRaycastSensor2D>();
-
-		m_HealthComponent = GetComponent<HealthComponent>();
-		Debug.Assert(m_HealthComponent != null);
-	
+		m_HealthComponent = GetComponent<HealthComponent>();	
 	} 
 
 	private void OnEnable()
@@ -57,17 +40,15 @@ public class PlayerController : MonoBehaviour
 
 		m_ActionMap.Default.MoveHoriz.performed += Handle_MovePerformed;
 		m_ActionMap.Default.MoveHoriz.canceled += Handle_MoveCancelled;
-
 		m_ActionMap.Default.Jump.performed += Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled += Handle_JumpCancelled;
 
+		m_ActionMap.Default.Dash.performed += Handlle_DashPerformed;
+
+	    m_ActionMap.Default.Shoot.performed += Handle_ShootPerformed;
+
 		m_ActionMap.Default.Crouch.performed += Handle_CrouchPeformed;
 		m_ActionMap.Default.Crouch.canceled += Handle_CrouchCancelled;
-
-		m_ActionMap.Default.Shoot.performed += Handle_ShootPerformed;
-
-		m_ActionMap.Default.Dash.performed += Handle_DashPreformed;
-		m_ActionMap.Default.Dash.canceled += Handle_DashCancelled;
 
 		m_HealthComponent.OnDamage += Handle_HealhDamage;
 		m_HealthComponent.OnDeath += Handle_OnDead;
@@ -82,17 +63,26 @@ public class PlayerController : MonoBehaviour
 		m_ActionMap.Default.Jump.performed -= Handle_JumpPerformed;
 		m_ActionMap.Default.Jump.canceled -= Handle_JumpCancelled;
 
-		m_ActionMap.Default.Crouch.performed -= Handle_CrouchPeformed;
-		m_ActionMap.Default.Crouch.canceled -= Handle_CrouchCancelled;
+
+		m_ActionMap.Default.Dash.performed -= Handlle_DashPerformed;
 
 		m_ActionMap.Default.Shoot.performed -= Handle_ShootPerformed;
 
-		m_ActionMap.Default.Dash.performed -= Handle_DashPreformed;
-		m_ActionMap.Default.Dash.canceled -= Handle_DashCancelled;
+		m_ActionMap.Default.Crouch.performed -= Handle_CrouchPeformed;
+		m_ActionMap.Default.Crouch.canceled -= Handle_CrouchCancelled;
 
 		m_HealthComponent.OnDamage -= Handle_HealhDamage;
 		m_HealthComponent.OnDeath -= Handle_OnDead;	
     }
+
+
+	private IEnumerator C_MovedUpdate()
+	{
+		while(m_InMoveActive)
+		{
+			yield return new WaitForSeconds(5f);
+		}
+	}
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
 	{
@@ -103,82 +93,72 @@ public class PlayerController : MonoBehaviour
 		m_Movement.SetInMove(0f);
 	}
 
+	private void Handlle_DashPerformed(InputAction.CallbackContext context)
+	{
+		m_Movement.StartDash();	
+	}
+
+	private void Handle_ShootPerformed(InputAction.CallbackContext callbackContext)
+	{
+		GameObject bullet = m_ObjectPooler.GetPooledObject("Bullet");
+		if(bullet == null) { return;}
+		bullet.SetActive(true);
+		m_FireWeaponSound.Play();
+
+		//bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2,0);
+		bullet.transform.position = new Vector3(m_FirePoint.transform.position.x, transform.position.y + 2,0);
+	}
+
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
 	{
 		m_JumpBufferCountdown = m_JumpbufferTimer;
 
-		if(m_JumpBufferCountdown > 0) //could add condition where don't jump when grounded
-		{ 
-			StartCoroutine(C_JumpBuffer());
+		if(m_JumpBufferCountdown > 0) 
+		{
+			C_JumpBuffer();
 		}
-	
+
 		m_Movement.StartJump();
-		
+		//maybe use while loop. While jump buffering is greater than 0 execute jump function
 	}
 
 	private IEnumerator C_JumpBuffer()
 	{
-		Debug.Log("I am jump buffering-------------------------");
+		m_IsJumping = true;
 		yield return new WaitForSeconds(m_JumpBufferCountdown);
-		//m_JumpBufferCountdown -= Time.deltaTime;
-		//m_JumpBufferCountdown--;
-		Debug.Log(m_JumpBufferCountdown);
 		m_Movement.StartJump();
+		m_IsJumping = false;
 	}
 
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
-	
 		m_Movement.StopJump();
 	}
 
 	private void Handle_CrouchPeformed(InputAction.CallbackContext context)
 	{
 		m_Movement.StartCrouch();
+        Debug.Log("Crouch pressed---------------------");
     }
 
 	private void Handle_CrouchCancelled(InputAction.CallbackContext context) 
 	{
 		m_Movement.StopCrouch();
+        Debug.Log("Crouch pressed---------------------");
     }
 
-	private void Handle_ShootPerformed(InputAction.CallbackContext context)
-	{
-		GameObject bullet = m_ObjectPooler.GetPooledObject("bullet");
-		if (bullet == null)  { return; }
-
-		bullet.SetActive(true);
-
-		bullet.transform.position = new Vector3(transform.position.z,  transform.position.y + 2, 0);
-		
-			//Instantiate(bulletPrefab, firingPoint.position, transform.rotation);
-			Debug.Log("Shooting");
-		
-	}
-
-	private void Handle_DashPreformed(InputAction.CallbackContext context)
-	{
-			m_Movement.StartDash();
-		
-    }
-	private void Handle_DashCancelled(InputAction.CallbackContext context) 
-	{ 	
-	}
-
-	public void Init()
-	{
-		Debug.Log("initilized Player Controller");
-	}
-
-    private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
+	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
 	{
 		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
 	}
 
 	private void Handle_OnDead(MonoBehaviour causer) 
 	{
-	
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+	}
+
+	public void Init()
+	{
+		Debug.Log("initilized Player Controller");
+	}
 }

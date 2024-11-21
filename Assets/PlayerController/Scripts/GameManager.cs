@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_ScoreUI;
     int dummyServicRef;
 
-    private int m_CurrentScore = 1;
+    private int m_CurrentScore = 0;
 
     public static Action<int> OnGainPoints;
 

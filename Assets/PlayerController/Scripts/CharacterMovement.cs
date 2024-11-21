@@ -23,8 +23,8 @@ public class CharacterMovement : MonoBehaviour
 
 	private Rigidbody2D m_RB;
 	[SerializeField] BoxCollider2D m_BoxCollider2D;
-
-	[SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
+    [SerializeField] private float m_BounceForce;
+    [SerializeField] private StatefulRaycastSensor2D m_GroundSensor;
 	[SerializeField] private float m_MoveSpeed;
 	[SerializeField] private float m_JumpStrength;
 
@@ -196,14 +196,12 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StartDash()
 	{
-		//  Debug.Log("IsDashing");
+		  Debug.Log("IsDashing");
 		if (isDashing == false)
 		{
 			m_CDash = StartCoroutine(Dash());
 		}
-
 	}
-
 	private IEnumerator Dash()
 	{
 
@@ -220,7 +218,6 @@ public class CharacterMovement : MonoBehaviour
 		yield return new WaitForSeconds(1);
 
 	}
-
 	public void StartJump()
 	{
 		if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0 || m_isJumping == true)
@@ -230,7 +227,6 @@ public class CharacterMovement : MonoBehaviour
 			StartCoroutine(JumpApex());
 		}
 	}
-
 	public void StopJump()
 	{
 		m_isJumping = false;
@@ -243,12 +239,14 @@ public class CharacterMovement : MonoBehaviour
 			m_CoyoteTimer = m_CoyoteThresHold;
 		}
 	}
-
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.gameObject.tag == "Weak Point")
-		{
-			Destroy(collision.gameObject);
-		}
-	}
+        if (collision.gameObject.CompareTag("Spike"))
+        {
+			Vector2 bounceDirct = -collision.contacts[0].normal;
+
+            m_RB.linearVelocity = Vector2.zero;
+			m_RB.AddForce(bounceDirct * m_BounceForce, ForceMode2D.Impulse);
+        }
+    }
 }
