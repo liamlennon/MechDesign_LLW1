@@ -208,6 +208,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -972,7 +985,41 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Preview 00_0: 8243860990081843180
+      Preview 00_1: 5434471785492486880
+      Preview 00_10: 8295205671577951453
+      Preview 00_11: -9040050527966791490
+      Preview 00_12: 3287934469085013132
+      Preview 00_13: -2548522586512645472
+      Preview 00_14: -7182516784972977698
+      Preview 00_15: 3007875108867342325
+      Preview 00_16: -6676736481573503530
+      Preview 00_17: -113227915488583837
+      Preview 00_18: 8022366752742343519
+      Preview 00_19: 5238363531413222149
+      Preview 00_2: -574288611061057177
+      Preview 00_20: 9189470712210641867
+      Preview 00_21: 5415744349246249265
+      Preview 00_22: -2396731028649080845
+      Preview 00_23: 3867658017902493795
+      Preview 00_24: 8442271050246511120
+      Preview 00_25: -6503594945204006238
+      Preview 00_26: -4292276825711713143
+      Preview 00_27: 7219766499521313072
+      Preview 00_28: 1781063896831560184
+      Preview 00_29: -6088823226669530861
+      Preview 00_3: -9194065121379149604
+      Preview 00_30: -654558937008742477
+      Preview 00_31: -6243217678217216873
+      Preview 00_32: -7399859068919770614
+      Preview 00_33: -5149080498444588492
+      Preview 00_4: 4521676651321172172
+      Preview 00_5: -8270989753932859717
+      Preview 00_6: -2786189099682903814
+      Preview 00_7: -7626136334155752962
+      Preview 00_8: -8797484165995884154
+      Preview 00_9: -8163823450173440608
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
