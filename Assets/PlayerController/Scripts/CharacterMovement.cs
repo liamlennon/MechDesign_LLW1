@@ -177,7 +177,6 @@ public class CharacterMovement : MonoBehaviour
 			{
 				m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
 			}
-
 			if (m_CurrentSpeed == m_MaxSpeed)
 			{
 
@@ -185,9 +184,7 @@ public class CharacterMovement : MonoBehaviour
 			}
 			yield return new WaitForFixedUpdate();
 		}
-
 		m_RB.linearVelocityX = m_MoveSpeed * m_InMove;
-
 	}
 	public void StartCrouch()
 	{
@@ -199,7 +196,7 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StartDash()
 	{
-		  Debug.Log("IsDashing");
+		 Debug.Log("IsDashing");
 		if (isDashing == false)
 		{
 			m_CDash = StartCoroutine(Dash());
@@ -207,7 +204,6 @@ public class CharacterMovement : MonoBehaviour
 	}
 	private IEnumerator Dash()
 	{
-
 		isDashing = true;
 		float originalGravity = m_RB.gravityScale;
 		m_RB.gravityScale = 0f;
@@ -223,8 +219,7 @@ public class CharacterMovement : MonoBehaviour
 	}
 	public void StartJump()
 	{
-
-        if (m_GroundSensor.HasDetectedHit() || m_isJumping == true)
+        if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
 		{
 			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
 			m_JumpTimeCounter -= Time.deltaTime;
@@ -237,7 +232,6 @@ public class CharacterMovement : MonoBehaviour
 			m_CJumpbuff = StartCoroutine(C_JumpBuffer());
 		}
 	}
-
 	IEnumerator C_JumpBuffer()
 	{
 		while (m_JumpbufferTimer >= 0)
@@ -246,35 +240,31 @@ public class CharacterMovement : MonoBehaviour
 			yield return null;
         }
     }
-
 	public void StopJump()
 	{
-		m_isJumping = false;
 		jumpStates = Falling;
 	}
 	private void OnCollisionExit2D(Collision2D collision)
 	{
-        m_CoyoteTimer = m_CoyoteThresHold;
-
-        if (m_RB.linearVelocityY <= 0 || m_CoyoteTimer > 0)
+        if (m_RB.linearVelocityY <= 0)
 		{
+            m_CoyoteTimer = m_CoyoteThresHold;
             m_CoyoteTimeCoroutine = StartCoroutine(CoyoteCouritne());
+			Debug.Log("CoyoteTimeWorking");
         }
 	}
 	private IEnumerator CoyoteCouritne()
-	{
-		m_CanCoyote = true;
+	{	
+		//m_CanCoyote = true;
+		Debug.Log("CoyoteCouritne");
 		m_CoyoteTimer -= Time.fixedDeltaTime;
-		new WaitForSeconds(m_CoyoteTimer);
-		m_CanCoyote = true;
+		
+		//m_CanCoyote = false;
 	    yield return null;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-        
-		
-		
 		if (collision.gameObject.CompareTag("Spike"))
         {
 			Vector2 bounceDirct = -collision.contacts[0].normal;
