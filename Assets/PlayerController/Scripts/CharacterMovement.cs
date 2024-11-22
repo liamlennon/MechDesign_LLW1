@@ -70,6 +70,9 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferThreshold;
 
+	[SerializeField] private float m_ApexMoveSpeed;
+
+
     enum JumpStates
 	{
 		Rising,
@@ -121,9 +124,8 @@ public class CharacterMovement : MonoBehaviour
 					break;
 					case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
-					//m_RB.linearVelocityY = new Vector2(0.5, 20.f);
-					m_MaxSpeed = 30;
-					//m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
+
+					m_MaxSpeed = 4;					
 					m_RB.gravityScale = 0.5f;
 					if (m_RB.linearVelocityY < -2)
 					{
@@ -137,7 +139,7 @@ public class CharacterMovement : MonoBehaviour
 					//m_RB.linearVelocity = new Vector2(transform.localScale.y * m_MaxSpeed, 0);
 					//control speed off fall 
 					Camera.main.fieldOfView = 30;
-					m_MoveSpeed = 5;
+					m_MoveSpeed = 2;
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
 					Debug.Log("Jump Falling");
 					break;
@@ -262,7 +264,6 @@ public class CharacterMovement : MonoBehaviour
 		//m_CanCoyote = false;
 	    yield return null;
 	}
-
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
 		if (collision.gameObject.CompareTag("Spike"))

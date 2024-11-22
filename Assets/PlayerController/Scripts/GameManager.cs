@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_ScoreUI;
     [SerializeField] private GameObject m_EndGame;
     [SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
+
     int dummyServicRef;
 
     private int m_CurrentScore = 0;
@@ -20,8 +21,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         m_PlayerRef = Instantiate(m_PlayerController);
-        //m_EndGame = C
-       
         m_PlayerRef.Init(m_ObjectPooler);
     }
 

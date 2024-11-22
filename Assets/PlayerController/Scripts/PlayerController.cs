@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Crouch pressed---------------------");
     }
 
-	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
+	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change, HealthComponent healthComponent) 
 	{
 		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
 	}
@@ -161,6 +161,5 @@ public class PlayerController : MonoBehaviour
 	{
 		Debug.Log("initilized Player Controller");
         m_ObjectPooler = poolerRef;
-
     }
 }
