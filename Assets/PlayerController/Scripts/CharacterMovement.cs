@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -62,14 +63,12 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_MaxFallSpeed;
 
 	[SerializeField] private float m_GroundMoveSpeed;
-	[SerializeField] private float A;
 	private float m_ApexPoint;
 	private float m_ApexSpeed;
 	private float m_JumpTimeCounter;
 
     [SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferThreshold;
-
 	[SerializeField] private float m_ApexMoveSpeed;
 
 
@@ -122,7 +121,7 @@ public class CharacterMovement : MonoBehaviour
 						jumpStates = JumpStates.Apex;
 					}
 					break;
-					case JumpStates.Apex:
+				case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
 
 					m_MaxSpeed = 4;					
@@ -136,16 +135,17 @@ public class CharacterMovement : MonoBehaviour
 				case JumpStates.Falling:
 					//control fall speed, camera zoom in
 					m_RB.gravityScale = 2f;
-					//m_RB.linearVelocity = new Vector2(transform.localScale.y * m_MaxSpeed, 0);
-					//control speed off fall 
+					while(!g)
 					Camera.main.fieldOfView = 30;
-					m_MoveSpeed = 2;
+					m_MoveSpeed = m_FallSpeed;
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
 					Debug.Log("Jump Falling");
 					break;
 			}
 			yield return new WaitForFixedUpdate();
 		}
+
+
 	}
 
 	public void SetInMove(float newMove)
@@ -246,23 +246,18 @@ public class CharacterMovement : MonoBehaviour
 	{
 		jumpStates = Falling;
 	}
-	private void OnCollisionExit2D(Collision2D collision)
-	{
-        if (m_RB.linearVelocityY <= 0)
-		{
-            m_CoyoteTimer = m_CoyoteThresHold;
-            m_CoyoteTimeCoroutine = StartCoroutine(CoyoteCouritne());
-			Debug.Log("CoyoteTimeWorking");
-        }
-	}
 	private IEnumerator CoyoteCouritne()
 	{	
 		//m_CanCoyote = true;
 		Debug.Log("CoyoteCouritne");
-		m_CoyoteTimer -= Time.fixedDeltaTime;
+		while (m_CoyoteTimer >= 0)
+		{
+			m_CoyoteTimer -= Time.deltaTime;
+			yield return null;
+		}
 		
 		//m_CanCoyote = false;
-	    yield return null;
+	   
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
@@ -278,4 +273,15 @@ public class CharacterMovement : MonoBehaviour
 			m_JumpbufferTimer = 0;
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (m_RB.linearVelocityY <= 0)
+        {
+            m_CoyoteTimer = m_CoyoteThresHold;
+            m_CoyoteTimeCoroutine = StartCoroutine(CoyoteCouritne());
+            Debug.Log("CoyoteTimeWorking");
+        }
+    }
+
 }

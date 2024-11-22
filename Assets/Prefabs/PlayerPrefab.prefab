@@ -88,8 +88,8 @@ MonoBehaviour:
   m_JumpStrength: 10
   tr: {fileID: 764845105098609497}
   dashingPower: 10
-  m_CoyoteTimer: 1
-  m_CoyoteThresHold: 0.4
+  m_CoyoteTimer: 0
+  m_CoyoteThresHold: 0.3
   m_MinSpeed: 13
   m_CurrentSpeed: 0
   m_MaxSpeed: 18
@@ -99,6 +99,7 @@ MonoBehaviour:
   A: 0
   m_JumpbufferTimer: 0
   m_JumpBufferThreshold: 0.2
+  m_ApexMoveSpeed: 0
 --- !u!114 &7287660109704455578
 MonoBehaviour:
   m_ObjectHideFlags: 0

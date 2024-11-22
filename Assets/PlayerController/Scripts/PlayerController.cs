@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Crouch pressed---------------------");
     }
 
-	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change, HealthComponent healthComponent) 
+	private void Handle_HealhDamage(float currentHealth, float maxHealth, float change) 
 	{
 		Debug.Log($"I was damaged, my current health is {currentHealth} out of {maxHealth}");
 	}
