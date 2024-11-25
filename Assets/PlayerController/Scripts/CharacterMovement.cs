@@ -48,6 +48,7 @@ public class CharacterMovement : MonoBehaviour
 	private Coroutine m_CDash;
 	private Coroutine m_CJumpbuff;
 	private Coroutine m_CoyoteTimeCoroutine;
+	private Coroutine m_JumpCoroutine;
 
 	private bool isFacingRight = true;
 
@@ -64,12 +65,13 @@ public class CharacterMovement : MonoBehaviour
 
 	[SerializeField] private float m_GroundMoveSpeed;
 	private float m_ApexPoint;
-	private float m_ApexSpeed;
 	private float m_JumpTimeCounter;
 
     [SerializeField] private float m_JumpbufferTimer = 0.5f;
 	[SerializeField] private float m_JumpBufferThreshold;
 	[SerializeField] private float m_ApexMoveSpeed;
+	[SerializeField] private float m_GravityApex;
+	[SerializeField] private float m_GravityApexFalling;
 
 
     enum JumpStates
@@ -78,9 +80,7 @@ public class CharacterMovement : MonoBehaviour
 		Apex,
 		Falling
 	}
-	JumpStates jumpStates = JumpStates.Rising, Apex, Falling;
-
-
+	JumpStates jumpStates = JumpStates.Rising;
 	private void Awake()
 	{
 		m_RB = GetComponent<Rigidbody2D>();
@@ -108,24 +108,25 @@ public class CharacterMovement : MonoBehaviour
 
 	IEnumerator JumpApex()
 	{
-		while (!m_GroundSensor.HasDetectedHit())
+		while (true)
 		{
 			switch (jumpStates)
 			{
 				case JumpStates.Rising:
 					//control speed of rise
 					m_RB.gravityScale = 1;
-					Debug.Log("Rising");
-					if (m_RB.linearVelocityY < 0.5)
+					if (m_RB.linearVelocityY <= 0)
 					{
+						Debug.Log("Rising");
 						jumpStates = JumpStates.Apex;
 					}
 					break;
 				case JumpStates.Apex:
 					// boost in speed when player hits jump apex, temporarily turn off gravity
 
-					m_MaxSpeed = 4;					
-					m_RB.gravityScale = 0.5f;
+					m_MaxSpeed = m_ApexMoveSpeed;					
+					m_RB.gravityScale = m_GravityApex;
+
 					if (m_RB.linearVelocityY < -2)
 					{
 						Debug.Log("Jump Apex");
@@ -134,28 +135,28 @@ public class CharacterMovement : MonoBehaviour
 					break;
 				case JumpStates.Falling:
 					//control fall speed, camera zoom in
-					m_RB.gravityScale = 2f;
-					while(!g)
-					Camera.main.fieldOfView = 30;
+					m_RB.gravityScale = m_GravityApexFalling;
+					//while
+					//Camera.main.fieldOfView = 30;
 					m_MoveSpeed = m_FallSpeed;
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
-					Debug.Log("Jump Falling");
+					//Debug.Log("Jump Falling");
 					break;
 			}
+
 			yield return new WaitForFixedUpdate();
+
 		}
-
-
-	}
+    }
 
 	public void SetInMove(float newMove)
 	{
 		m_InMove = newMove;
 		Flip();
-		if (m_MoveSpeed == m_MaxSpeed)
-		{
-			m_RB.gameObject.SetActive(false);
-		}
+		//if (m_MoveSpeed == m_MaxSpeed)
+		//{
+		//	m_RB.gameObject.SetActive(false);
+		//}
 		if (m_InMove == 0)
 		{
 			//we are stopped;
@@ -181,7 +182,6 @@ public class CharacterMovement : MonoBehaviour
 			}
 			if (m_CurrentSpeed == m_MaxSpeed)
 			{
-
 				m_RB.simulated = false;
 			}
 			yield return new WaitForFixedUpdate();
@@ -217,16 +217,17 @@ public class CharacterMovement : MonoBehaviour
 		m_RB.gravityScale = originalGravity;
 		isDashing = false;
 		yield return new WaitForSeconds(1);
-
 	}
 	public void StartJump()
 	{
         if (m_GroundSensor.HasDetectedHit() || m_CoyoteTimer > 0)
 		{
 			m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
-			m_JumpTimeCounter -= Time.deltaTime;
-			StartCoroutine(JumpApex());
-		}
+			//m_JumpTimeCounter -= Time.deltaTime;
+			jumpStates = JumpStates.Rising;
+            m_JumpCoroutine = StartCoroutine(JumpApex());
+
+        }
 		else
 		{
 			Debug.Log("jump buffer hit");
@@ -244,7 +245,7 @@ public class CharacterMovement : MonoBehaviour
     }
 	public void StopJump()
 	{
-		jumpStates = Falling;
+		jumpStates = JumpStates.Falling;
 	}
 	private IEnumerator CoyoteCouritne()
 	{	
@@ -255,9 +256,7 @@ public class CharacterMovement : MonoBehaviour
 			m_CoyoteTimer -= Time.deltaTime;
 			yield return null;
 		}
-		
 		//m_CanCoyote = false;
-	   
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
@@ -272,8 +271,9 @@ public class CharacterMovement : MonoBehaviour
             m_RB.AddForce(Vector2.up * m_JumpStrength, ForceMode2D.Impulse);
 			m_JumpbufferTimer = 0;
         }
+        m_MoveSpeed = m_MaxSpeed;
+        m_RB.gravityScale = 1;
     }
-
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (m_RB.linearVelocityY <= 0)
@@ -283,5 +283,4 @@ public class CharacterMovement : MonoBehaviour
             Debug.Log("CoyoteTimeWorking");
         }
     }
-
 }

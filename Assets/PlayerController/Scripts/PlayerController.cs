@@ -76,13 +76,13 @@ public class PlayerController : MonoBehaviour
     }
 
 
-	private IEnumerator C_MovedUpdate()
-	{
-		while(m_InMoveActive)
-		{
-			yield return new WaitForSeconds(5f);
-		}
-	}
+	//private IEnumerator C_MovedUpdate()
+	//{
+	//	while(m_InMoveActive)
+	//	{
+	//		yield return new WaitForSeconds(5f);
+	//	}
+	//}
 
 	private void Handle_MovePerformed(InputAction.CallbackContext context)
 	{
