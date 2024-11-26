@@ -132,19 +132,22 @@ public class CharacterMovement : MonoBehaviour
 						jumpStates = JumpStates.Falling;
 					}
 					break;
-				case JumpStates.Falling:
+					case JumpStates.Falling:
 					//control fall speed, camera zoom in
-					m_RB.gravityScale = 2f;
-					while(!g)
-					Camera.main.fieldOfView = 30;
-					m_MoveSpeed = m_FallSpeed;
+						m_RB.gravityScale = 2f;
+						Camera.main.fieldOfView = 30;
+					
+					while(!m_GroundSensor)
+					{
+						m_MoveSpeed = m_FallSpeed;
+					}	
 					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
 					Debug.Log("Jump Falling");
 					break;
 			}
 			yield return new WaitForFixedUpdate();
-		}
 
+		}
 
 	}
 
@@ -254,10 +257,7 @@ public class CharacterMovement : MonoBehaviour
 		{
 			m_CoyoteTimer -= Time.deltaTime;
 			yield return null;
-		}
-		
-		//m_CanCoyote = false;
-	   
+		}   
 	}
 	private void OnCollisionEnter2D(Collision2D collision)
 	{

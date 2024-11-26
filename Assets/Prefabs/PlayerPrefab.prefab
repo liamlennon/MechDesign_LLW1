@@ -96,7 +96,6 @@ MonoBehaviour:
   m_FallSpeed: 0
   m_MaxFallSpeed: 0
   m_GroundMoveSpeed: 0
-  A: 0
   m_JumpbufferTimer: 0
   m_JumpBufferThreshold: 0.2
   m_ApexMoveSpeed: 0
