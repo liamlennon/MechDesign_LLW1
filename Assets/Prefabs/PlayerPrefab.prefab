@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_FirePoint: {fileID: 1673640109741036677}
+  m_BulletPrefab: {fileID: 6412323190371976552, guid: 01c2530837097cc4e9a9297100165db5, type: 3}
   m_FireWeaponSound: {fileID: 0}
 --- !u!96 &764845105098609497
 TrailRenderer:

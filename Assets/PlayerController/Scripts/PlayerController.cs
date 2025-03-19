@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Data.SqlTypes;
+using System.IO.Pipes;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour
 	private CharacterMovement m_Movement;
 
 	[SerializeField] private Transform m_FirePoint;
+	[SerializeField] private Bullet m_BulletPrefab;
+
 
 	private HealthComponent m_HealthComponent;
 	private DesignPatterns_ObjectPooler m_ObjectPooler;
@@ -24,7 +27,7 @@ public class PlayerController : MonoBehaviour
 	//private bool m_IsJumping;
 	private Coroutine m_cJumpBuffer;
 
-	[SerializeField] private AudioSource m_FireWeaponSound;
+	
 
 	
     private void Awake()
@@ -100,35 +103,26 @@ public class PlayerController : MonoBehaviour
 
 	private void Handle_ShootPerformed(InputAction.CallbackContext callbackContext)
 	{
-		GameObject bullet = m_ObjectPooler.GetPooledObject("Bullet");
-		if(bullet == null) { return;}
-		bullet.SetActive(true);
-		m_FireWeaponSound.Play();
+		//GameObject bullet = m_ObjectPooler.GetPooledObject("Bullet");
+		//if(bullet == null) { return;}
+		//bullet.SetActive(true);
+		
 
-		//bullet.transform.position = new Vector3(transform.position.z, transform.position.y + 2,0);
-		bullet.transform.position = new Vector3(m_FirePoint.transform.position.x, transform.position.y + 2,0);
+		Bullet bulletObject = Instantiate(m_BulletPrefab, m_FirePoint.position, m_FirePoint.rotation);
+
+		// Ensure the bullet moves in the correct direction
+		Rigidbody2D rb = bulletObject.GetComponent<Rigidbody2D>();
+		if (rb != null)
+		{
+			float bulletSpeed = 10f; // Adjust speed as needed
+			rb.linearVelocity = m_FirePoint.right * bulletSpeed;
+			//bullet.transform.position = new Vector3(m_FirePoint.transform.position.x, transform.position.y + 2,0);
+		}
 	}
-
 	private void Handle_JumpPerformed(InputAction.CallbackContext context)
 	{
-		//m_JumpBufferCountdown = m_JumpbufferTimer;
-
-		//if(m_JumpBufferCountdown > 0) 
-		//{
-		//	C_JumpBuffer();
-		//}
-
 		m_Movement.StartJump();
-		//maybe use while loop. While jump buffering is greater than 0 execute jump function
 	}
-
-	//private IEnumerator C_JumpBuffer()
-	//{
-	//	m_IsJumping = true;
-	//	yield return new WaitForSeconds(m_JumpBufferCountdown);
-	//	m_Movement.StartJump();
-	//	m_IsJumping = false;
-	//}
 
 	private void Handle_JumpCancelled(InputAction.CallbackContext context)
 	{
