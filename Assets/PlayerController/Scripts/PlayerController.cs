@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
 	
 
-	
+		
     private void Awake()
 	{
 		m_ActionMap = new PlayerControls();
@@ -101,25 +101,33 @@ public class PlayerController : MonoBehaviour
 		m_Movement.StartDash();	
 	}
 
-	private void Handle_ShootPerformed(InputAction.CallbackContext callbackContext)
-	{
-		//GameObject bullet = m_ObjectPooler.GetPooledObject("Bullet");
-		//if(bullet == null) { return;}
-		//bullet.SetActive(true);
-		
+    private void Handle_ShootPerformed(InputAction.CallbackContext callbackContext)
+    {
+        if (m_BulletPrefab == null || m_FirePoint == null)
+        {
+            Debug.LogError("Bullet prefab or FirePoint is not assigned!");
+            return;
+        }
+  
 
-		Bullet bulletObject = Instantiate(m_BulletPrefab, m_FirePoint.position, m_FirePoint.rotation);
+        // Instantiate bullet
+        Bullet bulletObject = Instantiate(m_BulletPrefab, m_FirePoint.position, m_FirePoint.rotation);
 
-		// Ensure the bullet moves in the correct direction
-		Rigidbody2D rb = bulletObject.GetComponent<Rigidbody2D>();
-		if (rb != null)
-		{
-			float bulletSpeed = 10f; // Adjust speed as needed
-			rb.linearVelocity = m_FirePoint.right * bulletSpeed;
-			//bullet.transform.position = new Vector3(m_FirePoint.transform.position.x, transform.position.y + 2,0);
-		}
-	}
-	private void Handle_JumpPerformed(InputAction.CallbackContext context)
+        // Get Rigidbody2D
+        Rigidbody2D rb = bulletObject.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            Debug.LogError("Bullet prefab is missing a Rigidbody2D component!");
+            return;
+        }
+
+       
+
+        // Set bullet velocity in correct direction
+        float bulletSpeed = 10f;
+        rb.linearVelocity = m_FirePoint.right * bulletSpeed;	
+    }
+    private void Handle_JumpPerformed(InputAction.CallbackContext context)
 	{
 		m_Movement.StartJump();
 	}

@@ -71,6 +71,10 @@ public class CharacterMovement : MonoBehaviour
 	[SerializeField] private float m_JumpBufferThreshold;
 	[SerializeField] private float m_ApexMoveSpeed;
 
+	[SerializeField] private Transform m_BumpCheck;
+	private float m_CeilingCheckRadius = 0.2f;
+	private bool m_HitCieling;
+
 
     enum JumpStates
 	{
@@ -96,6 +100,12 @@ public class CharacterMovement : MonoBehaviour
 	private void FixedUpdate()
 	{		
 		if (isDashing) { return; }
+
+		if(m_HitCieling && m_RB.linearVelocity.y > 0)
+		{
+			m_RB.linearVelocity = new Vector2(m_RB.linearVelocity.x, 0);
+			Debug.Log($"Head Bumped");
+		}
 	}
 
 	private void Flip()
@@ -236,6 +246,9 @@ public class CharacterMovement : MonoBehaviour
 			m_JumpbufferTimer = m_JumpBufferThreshold; 
 			m_CJumpbuff = StartCoroutine(C_JumpBuffer());
 		}
+
+		
+
 	}
 	IEnumerator C_JumpBuffer()
 	{

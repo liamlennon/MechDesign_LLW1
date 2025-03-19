@@ -40,6 +40,7 @@ Transform:
   - {fileID: 5406072704542687043}
   - {fileID: 1673640109741036677}
   - {fileID: 4536821591369379439}
+  - {fileID: 865176567097376916}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &969958807700409231
@@ -98,7 +99,8 @@ MonoBehaviour:
   m_GroundMoveSpeed: 0
   m_JumpbufferTimer: 0
   m_JumpBufferThreshold: 0.2
-  m_ApexMoveSpeed: 0
+  m_ApexMoveSpeed: 3
+  m_BumpCheck: {fileID: 865176567097376916}
 --- !u!114 &7287660109704455578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +115,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirePoint: {fileID: 1673640109741036677}
   m_BulletPrefab: {fileID: 6412323190371976552, guid: 01c2530837097cc4e9a9297100165db5, type: 3}
-  m_FireWeaponSound: {fileID: 0}
 --- !u!96 &764845105098609497
 TrailRenderer:
   serializedVersion: 3
@@ -712,6 +713,37 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &8317884478874562515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 865176567097376916}
+  m_Layer: 6
+  m_Name: BumpCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &865176567097376916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8317884478874562515}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.077, y: 1.714, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3600401525870630746}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8916355968564707475
 GameObject:
   m_ObjectHideFlags: 0
