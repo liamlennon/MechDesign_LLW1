@@ -159,6 +159,12 @@ public class PlayerController : MonoBehaviour
 		Debug.Log($"I am deaded, the thing that killed me is {causer.gameObject.name}");
 	}
 
+	public void InitHealth(HealthComponent health)
+	{
+		Debug.Log("Inilized HealthBar");
+		m_HealthComponent = health;
+	}
+
 	public void Init(DesignPatterns_ObjectPooler poolerRef)
 	{
 		Debug.Log("initilized Player Controller");

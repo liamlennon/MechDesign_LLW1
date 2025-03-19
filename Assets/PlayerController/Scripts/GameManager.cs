@@ -9,8 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerController m_PlayerController;
     private PlayerController m_PlayerRef;
     [SerializeField] private TextMeshProUGUI m_ScoreUI;
+   
     [SerializeField] private GameObject m_EndGame;
     [SerializeField] private DesignPatterns_ObjectPooler m_ObjectPooler;
+    [SerializeField] HealthComponent m_HealthComponent;
+
 
     int dummyServicRef;
 
@@ -22,6 +25,7 @@ public class GameManager : MonoBehaviour
     {
         m_PlayerRef = Instantiate(m_PlayerController);
         m_PlayerRef.Init(m_ObjectPooler);
+        m_PlayerRef.InitHealth(m_HealthComponent);
     }
 
     private void OnEnable()

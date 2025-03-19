@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,7 @@ public class GameEnd : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene("End Menu");
         }
 
     }

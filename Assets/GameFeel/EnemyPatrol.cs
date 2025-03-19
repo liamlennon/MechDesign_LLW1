@@ -64,10 +64,10 @@ public class EnemyPatrol : MonoBehaviour
         if (player != null)
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
-            if (distance <= m_AttackRange && Time.time >= m_NextFireTime)
+            if (distance <= m_AttackRange)
             {
                 FireBullet();
-                m_NextFireTime = Time.time + m_FireRate;
+               
             }
         }
     }
