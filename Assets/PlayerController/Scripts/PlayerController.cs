@@ -121,8 +121,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-       
-
         // Set bullet velocity in correct direction
         float bulletSpeed = 10f;
         rb.linearVelocity = m_FirePoint.right * bulletSpeed;	

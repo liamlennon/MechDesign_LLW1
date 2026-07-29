@@ -2,7 +2,6 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,8 +39,7 @@ public class CharacterMovement : MonoBehaviour
 
 	private bool m_isJumping;
 	private bool m_CanCoyote;
-	//[SerializeField] private float m_JumpBufferTimer = 0.5f;
-	//[SerializeField] private float m_JumpBufferCountdown;
+
 
 	private bool m_IsMoving;
 	private Coroutine m_CMove;
@@ -52,8 +50,10 @@ public class CharacterMovement : MonoBehaviour
 	private bool isFacingRight = true;
 
 	private float m_InMove;
-	[SerializeField] private float m_CoyoteTimer;
-	[SerializeField] private float m_CoyoteThresHold;
+
+	[Header("Coyote Time")]
+	[SerializeField] private float m_CoyoteTime = 0.15f;
+	private float m_CoyoteCounter;
 
 	[SerializeField] private float m_MinSpeed;
 	[SerializeField] private float m_CurrentSpeed;
@@ -67,8 +67,11 @@ public class CharacterMovement : MonoBehaviour
 	private float m_ApexSpeed;
 	private float m_JumpTimeCounter;
 
-    [SerializeField] private float m_JumpbufferTimer = 0.5f;
-	[SerializeField] private float m_JumpBufferThreshold;
+	[Header("Jump Buffer")]
+	[SerializeField] private float m_JumpBufferTime = 0.15f;
+	private float m_JumpBufferCounter;
+
+
 	[SerializeField] private float m_ApexMoveSpeed;
 
 	[SerializeField] private Transform m_BumpCheck;
@@ -89,7 +92,7 @@ public class CharacterMovement : MonoBehaviour
 	{
 		m_RB = GetComponent<Rigidbody2D>();
 		m_BoxCollider2D = GetComponent<BoxCollider2D>();
-		//Debug.Assert(m_GroundSensor != null);
+		
 		m_PlayerController = GetComponent<PlayerController>();
 	}
 	private void Update()
@@ -151,7 +154,7 @@ public class CharacterMovement : MonoBehaviour
 					{
 						m_MoveSpeed = m_FallSpeed;
 					}	
-					//Falling = (JumpStates)Mathf.Lerp(m_FallSpeed, m_MaxFallSpeed, m_ApexPoint);
+				
 					Debug.Log("Jump Falling");
 					break;
 			}
@@ -222,7 +225,7 @@ public class CharacterMovement : MonoBehaviour
 		isDashing = true;
 		float originalGravity = m_RB.gravityScale;
 		m_RB.gravityScale = 0f;
-		//m_RB.linearVelocity = new Vector2(transform.localScale.y * dashingPower, 0f);
+	
 		m_RB.AddForce(new Vector2(m_InMove * dashingPower, 0), ForceMode2D.Impulse);
 		tr.emitting = true;
 		yield return new WaitForSeconds(1);
@@ -264,7 +267,7 @@ public class CharacterMovement : MonoBehaviour
 	}
 	private IEnumerator CoyoteCouritne()
 	{	
-		//m_CanCoyote = true;
+		
 		Debug.Log("CoyoteCouritne");
 		while (m_CoyoteTimer >= 0)
 		{

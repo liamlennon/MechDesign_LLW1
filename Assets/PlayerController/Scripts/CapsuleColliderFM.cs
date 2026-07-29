@@ -30,15 +30,14 @@ public class CapsuleColliderFM : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        //m_CapsuleCollider.size = new Vector2(1, 2);
-        //m_CapsuleCollider.size = new Vector2(1, 2);
+   
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("IN wall");
         m_BoxCollider.size = new Vector2(1, 1.32f);
-        //m_CapsuleCollider.size = new Vector2(defaultSize.x, defaultSize.y);
+     
     }
 
     private void OnTriggerStay2D(Collider2D collision)
